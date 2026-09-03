@@ -1,0 +1,24 @@
+/* SmartPark Hardware Monitor, Live GPS Navigation & Trip Planner Styles */
+
+.signal-strength-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.signal-bar {
+  width: 3px;
+  background: var(--status-high-text);
+  border-radius: 1px;
+}
+
+.step-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  margin-bottom: 10px;
+}

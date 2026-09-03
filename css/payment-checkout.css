@@ -1,0 +1,24 @@
+/* SmartPark Payment Checkout & Tariff Settlement Styles */
+
+.pay-method-btn {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  padding: 10px 4px;
+  justify-content: center;
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+}
+
+.pay-method-btn.active {
+  background: var(--primary-50);
+  border-color: var(--primary-600);
+  color: var(--primary-600);
+}
+
+[data-theme="dark"] .pay-method-btn.active {
+  background: rgba(99, 102, 241, 0.2);
+  border-color: var(--primary-400);
+  color: var(--primary-300);
+}
