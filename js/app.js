@@ -1,7 +1,8 @@
 /**
  * SmartPark Main Application Controller
- * Handles Public Parking, Private Parking Multi-Tier Access Control,
- * Separate Login & Signup, User Dashboard, About Page, and Admin Management Console.
+ * Coordinates Full-Stack REST API & Database, Public & Private Parking Multi-Tier Access Control,
+ * Separate Login & Signup, User Dashboard with Vehicle Garage & Bay Selector, IoT Sensor Simulator,
+ * SVG Analytics Dashboard, and Admin Suite.
  */
 
 import { PUBLIC_PARKING_ZONES, PUBLIC_PARKING_SUMMARY } from './data/parkingZonesData.js';
@@ -21,6 +22,7 @@ import { renderParkingList } from './components/parkingList.js';
 import { initParkingMap } from './components/parkingMap.js';
 import { renderPredictionSection } from './components/predictionSection.js';
 import { initModals } from './components/modals.js';
+import { initNotificationCenter, openNotificationDrawer } from './components/notificationCenter.js';
 
 // Private Parking Components
 import { renderPrivateSummaryStats } from './components/privateSummaryStats.js';
@@ -97,7 +99,15 @@ class SmartParkApp {
       });
     }
 
-    // 7. Listen for Auth State Changes
+    // 7. Notification Bell Trigger
+    const notifBell = document.getElementById('navbar-notif-bell');
+    if (notifBell) {
+      notifBell.addEventListener('click', () => {
+        openNotificationDrawer();
+      });
+    }
+
+    // 8. Listen for Auth State Changes
     window.addEventListener('smartpark_auth_changed', (e) => {
       const { user } = e.detail;
       this.currentUser = user;
@@ -106,13 +116,13 @@ class SmartParkApp {
       this.applyPrivateFilters();
     });
 
-    // 8. Listen for Admin Updates (Locations / Companies)
+    // 9. Listen for Admin Updates (Locations / Companies / Sensor events)
     window.addEventListener('smartpark_locations_updated', () => {
       this.applyPublicFilters();
       this.applyPrivateFilters();
     });
 
-    // 9. Initial Mounts
+    // 10. Initial Mounts
     this.mountPublicParkingPage();
     this.mountPrivateParkingPage();
     this.updateNavbarAuthUI();
@@ -242,6 +252,8 @@ class SmartParkApp {
         if (hash.includes('parking')) subTab = 'parking';
         else if (hash.includes('companies')) subTab = 'companies';
         else if (hash.includes('violations')) subTab = 'violations';
+        else if (hash.includes('sensors')) subTab = 'sensors';
+        else if (hash.includes('analytics')) subTab = 'analytics';
 
         renderAdminView('view-admin', subTab, (target) => this.navigateTo(target));
       }

@@ -1,0 +1,85 @@
+/* SmartPark Analytics & SVG Visualizations Styles */
+
+.analytics-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.chart-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.chart-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.svg-chart-container {
+  width: 100%;
+  height: 240px;
+  position: relative;
+}
+
+.svg-chart {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Peak Hours Heatmap Timeline */
+.heatmap-timeline-row {
+  display: grid;
+  grid-template-columns: repeat(24, 1fr);
+  gap: 4px;
+  margin-top: 14px;
+  align-items: flex-end;
+  height: 100px;
+}
+
+.heatmap-bar-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+  position: relative;
+}
+
+.heatmap-bar {
+  width: 100%;
+  border-radius: 3px 3px 0 0;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.heatmap-bar:hover {
+  filter: brightness(1.25);
+  transform: scaleY(1.05);
+}
+
+.heatmap-hour-label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .analytics-grid {
+    grid-template-columns: 1fr;
+  }
+}

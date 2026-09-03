@@ -1,0 +1,132 @@
+/* SmartPark Sensor Simulator, Notifications & Vehicle Garage Styles */
+
+/* 1. SENSOR SIMULATOR */
+.simulator-console-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  margin-bottom: 32px;
+}
+
+.simulator-controls-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.simulator-btn-card {
+  background: var(--bg-surface-subtle);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.simulator-btn-card:hover {
+  border-color: var(--primary-500);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.telemetry-log-box {
+  background: #090d16;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.8125rem;
+  color: #10b981;
+  max-height: 260px;
+  overflow-y: auto;
+  line-height: 1.6;
+}
+
+/* 2. NOTIFICATIONS CENTER */
+.notification-bell-btn {
+  position: relative;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.notification-bell-btn:hover {
+  background: var(--bg-surface-hover);
+}
+
+.notif-badge-count {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #ef4444;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--bg-surface);
+}
+
+.notif-item-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 14px 18px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  transition: all var(--transition-fast);
+}
+
+.notif-item-card.unread {
+  border-left: 4px solid var(--primary-600);
+  background: var(--bg-surface-hover);
+}
+
+/* 3. VEHICLE GARAGE */
+.vehicle-card-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+  margin-bottom: 12px;
+  transition: all var(--transition-fast);
+}
+
+.vehicle-card-row:hover {
+  border-color: var(--primary-400);
+}
+
+.vehicle-plate-badge {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--primary-600);
+  letter-spacing: 0.08em;
+  background: var(--bg-surface);
+  border: 1.5px solid var(--border-color);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  display: inline-block;
+}

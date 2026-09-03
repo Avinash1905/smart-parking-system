@@ -1,13 +1,16 @@
 /**
  * Admin Management View Component
  * Renders Admin Dashboard Overview, Parking Locations CRUD Table, Companies Directory,
- * Violations Workflow Table, and Access Denied Guard.
+ * Violations Workflow Table, IoT Sensor Simulator, and SVG Analytics Dashboard.
  */
 
 import { authService } from '../data/authService.js';
 import { adminService } from '../data/adminService.js';
 import { violationService } from '../data/violationService.js';
 import { initAdminModals } from './adminModals.js';
+import { renderSensorSimulator } from './sensorSimulatorView.js';
+import { renderAnalyticsDashboard } from './analyticsDashboardView.js';
+import { openSlotGridModal } from './slotGridModal.js';
 
 export function renderAdminView(containerId, activeSubTab = 'overview', onNavigate) {
   const container = document.getElementById(containerId);
@@ -44,7 +47,6 @@ export function renderAdminView(containerId, activeSubTab = 'overview', onNaviga
   const companies = adminService.getCompanies();
   const violations = violationService.getViolations();
 
-  // Helper formatting
   function getParkingTypeBadge(type) {
     switch (type) {
       case 'PUBLIC':
@@ -120,9 +122,19 @@ export function renderAdminView(containerId, activeSubTab = 'overview', onNaviga
           Parking Violations
           <span class="tab-count-badge" style="background: rgba(239, 68, 68, 0.2); color: var(--status-low-text);">${violations.filter(v => v.status === 'OPEN').length} Open</span>
         </button>
+
+        <button type="button" class="admin-tab-btn ${activeSubTab === 'sensors' ? 'active' : ''}" data-tab="sensors">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+          Sensor Simulator
+        </button>
+
+        <button type="button" class="admin-tab-btn ${activeSubTab === 'analytics' ? 'active' : ''}" data-tab="analytics">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          Analytics & Reports
+        </button>
       </div>
 
-      <!-- TAB CONTENT AREA -->
+      <!-- TAB CONTENT CONTAINER -->
       <div id="admin-tab-body">
         ${renderTabContent(activeSubTab)}
       </div>
@@ -130,15 +142,11 @@ export function renderAdminView(containerId, activeSubTab = 'overview', onNaviga
   `;
 
   function renderTabContent(tab) {
-    if (tab === 'parking') {
-      return renderParkingLocationsTab();
-    }
-    if (tab === 'companies') {
-      return renderCompaniesTab();
-    }
-    if (tab === 'violations') {
-      return renderViolationsTab();
-    }
+    if (tab === 'parking') return renderParkingLocationsTab();
+    if (tab === 'companies') return renderCompaniesTab();
+    if (tab === 'violations') return renderViolationsTab();
+    if (tab === 'sensors') return '<div id="admin-sensor-sim-mount"></div>';
+    if (tab === 'analytics') return '<div id="admin-analytics-mount"></div>';
     return renderOverviewTab();
   }
 
@@ -260,9 +268,14 @@ export function renderAdminView(containerId, activeSubTab = 'overview', onNaviga
                   </span>
                 </td>
                 <td>
-                  <button type="button" class="btn btn-secondary btn-sm btn-loc-toggle" data-id="${loc.id}">
-                    ${loc.status === 'ACTIVE' ? 'Deactivate' : 'Activate'}
-                  </button>
+                  <div style="display: flex; gap: 6px;">
+                    <button type="button" class="btn btn-primary btn-sm btn-loc-slots" data-id="${loc.id}">
+                      View Bays
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-sm btn-loc-toggle" data-id="${loc.id}">
+                      ${loc.status === 'ACTIVE' ? 'Deactivate' : 'Activate'}
+                    </button>
+                  </div>
                 </td>
               </tr>
             `).join('')}
@@ -362,8 +375,14 @@ export function renderAdminView(containerId, activeSubTab = 'overview', onNaviga
     `;
   }
 
+  // Mount Sensor Simulator or Analytics if selected
+  if (activeSubTab === 'sensors') {
+    renderSensorSimulator('admin-sensor-sim-mount');
+  } else if (activeSubTab === 'analytics') {
+    renderAnalyticsDashboard('admin-analytics-mount');
+  }
+
   // --- Attach Event Listeners ---
-  // Tab Switching
   container.querySelectorAll('.admin-tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const targetTab = btn.getAttribute('data-tab');
@@ -408,6 +427,19 @@ export function renderAdminView(containerId, activeSubTab = 'overview', onNaviga
     });
   });
 
+  // View Bays Modal
+  container.querySelectorAll('.btn-loc-slots').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const locId = btn.getAttribute('data-id');
+      const loc = locations.find(l => l.id === locId);
+      if (loc) {
+        openSlotGridModal(loc, (chosenSlot) => {
+          // handled
+        });
+      }
+    });
+  });
+
   // View Violation Details
   container.querySelectorAll('.btn-viol-view').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -415,44 +447,6 @@ export function renderAdminView(containerId, activeSubTab = 'overview', onNaviga
       modals.openViolationDetailsModal(vId, () => {
         renderAdminView(containerId, activeSubTab, onNavigate);
       });
-    });
-  });
-
-  // Violation Filter Chips
-  container.querySelectorAll('.filter-chip[data-viol-filter]').forEach(chip => {
-    chip.addEventListener('click', () => {
-      container.querySelectorAll('.filter-chip[data-viol-filter]').forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-      const st = chip.getAttribute('data-viol-filter');
-      const filtered = violationService.getViolations(st);
-      const tbody = document.getElementById('admin-viol-table-body');
-      if (tbody) {
-        tbody.innerHTML = filtered.map(v => `
-          <tr>
-            <td><strong>${v.id}</strong></td>
-            <td><strong style="color: var(--primary-600);">${v.vehiclePlate}</strong></td>
-            <td>${v.userName}</td>
-            <td><span style="font-size: 0.8125rem;">${v.parkingLocation}</span></td>
-            <td><span class="badge" style="background: rgba(239,68,68,0.08); color: var(--status-low-text);">${v.violationType}</span></td>
-            <td><span style="font-size: 0.8125rem; color: var(--text-muted);">${v.dateTime}</span></td>
-            <td>${getViolationStatusBadge(v.status)}</td>
-            <td>
-              <button type="button" class="btn btn-secondary btn-sm btn-viol-view" data-id="${v.id}">
-                View & Action
-              </button>
-            </td>
-          </tr>
-        `).join('');
-
-        tbody.querySelectorAll('.btn-viol-view').forEach(btn => {
-          btn.addEventListener('click', () => {
-            const vId = btn.getAttribute('data-id');
-            modals.openViolationDetailsModal(vId, () => {
-              renderAdminView(containerId, activeSubTab, onNavigate);
-            });
-          });
-        });
-      }
     });
   });
 }

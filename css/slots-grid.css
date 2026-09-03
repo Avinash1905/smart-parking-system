@@ -1,0 +1,150 @@
+/* SmartPark Interactive Slot Grid & Bay Selector Styles */
+
+.slot-grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
+  gap: 12px;
+  padding: 18px 0;
+  max-height: 380px;
+  overflow-y: auto;
+}
+
+.parking-bay-box {
+  aspect-ratio: 1 / 1.15;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-surface-subtle);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 4px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+  user-select: none;
+}
+
+.parking-bay-box:hover:not(.occupied):not(.blocked) {
+  transform: translateY(-2px);
+  border-color: var(--primary-500);
+  box-shadow: var(--shadow-sm);
+}
+
+.parking-bay-box.available {
+  border-color: rgba(16, 185, 129, 0.4);
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.parking-bay-box.available:hover {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: #10b981;
+}
+
+.parking-bay-box.occupied {
+  border-color: rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.06);
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.parking-bay-box.reserved {
+  border-color: rgba(245, 158, 11, 0.4);
+  background: rgba(245, 158, 11, 0.08);
+  cursor: not-allowed;
+}
+
+.parking-bay-box.selected-slot {
+  background: var(--primary-50);
+  border-color: var(--primary-600);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+}
+
+[data-theme="dark"] .parking-bay-box.selected-slot {
+  background: rgba(99, 102, 241, 0.25);
+  border-color: var(--primary-400);
+}
+
+.bay-number {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.bay-status-text {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.bay-ev-tag {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent-cyan);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  font-weight: 900;
+}
+
+/* Slot Legend Bar */
+.slot-legend-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 12px;
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+/* Floor Level Switcher Tabs */
+.floor-switcher-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.floor-tab-btn {
+  padding: 6px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.floor-tab-btn.active {
+  background: var(--primary-600);
+  color: #ffffff;
+  border-color: var(--primary-600);
+}
