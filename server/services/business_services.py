@@ -94,7 +94,7 @@ class AuthService:
             cursor.execute("""
                 INSERT INTO vehicles (id, user_id, registration_plate, vehicle_type, brand, model, color, is_ev, fast_charge_compatible, is_default, created_at)
                 VALUES (?, ?, ?, ?, ?, ?, 'Standard', 0, 0, 1, ?)
-            """, (f"veh-{uuid.uuid4().hex[:8]}", user_id, vehicle_plate, data.get("vehicle_type", "CAR"), now_iso))
+            """, (f"veh-{uuid.uuid4().hex[:8]}", user_id, vehicle_plate, data.get("vehicle_type", "CAR"), data.get("brand", "Generic"), data.get("model", "Standard"), now_iso))
 
             conn.commit()
 
