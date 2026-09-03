@@ -11,6 +11,14 @@ import os
 import sys
 from datetime import datetime
 
+# Ensure UTF-8 output on Windows console
+if sys.platform == "win32" and hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 # Import business engines
 from server.services.business_services import (
     AuthService, ParkingService, SlotService, ReservationService,
@@ -211,11 +219,13 @@ class SmartParkRequestHandler(http.server.SimpleHTTPRequestHandler):
 
         return self._send_json({"success": False, "message": "Unknown PATCH route"}, 404)
 
-if __name__ == "__main__":
-    server_address = ('', PORT)
+def run_server(port: int = PORT):
+    server_address = ('', port)
+    # Enable address reuse so restarts don't hit socket errors
+    socketserver.TCPServer.allow_reuse_address = True
     httpd = socketserver.TCPServer(server_address, SmartParkRequestHandler)
     print("=========================================================")
-    print(f"[SMARTPARK] Full-Stack Server Running on http://localhost:{PORT}")
+    print(f"[SMARTPARK] Full-Stack Server Running on http://localhost:{port}")
     print(f"[SMARTPARK] Serving REST APIs & Frontend Assets from {STATIC_DIR}")
     print("=========================================================")
     try:
@@ -223,3 +233,7 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print("\nShutting down server.")
         httpd.server_close()
+
+if __name__ == "__main__":
+    run_server(PORT)
+
