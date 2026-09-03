@@ -1,0 +1,43 @@
+/* SmartPark Invoice Receipt & Digital Pass Styles */
+
+.invoice-summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.invoice-summary-table td {
+  padding: 8px 0;
+  color: var(--text-secondary);
+}
+
+.invoice-summary-table td:last-child {
+  text-align: right;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.invoice-total-row td {
+  border-top: 1.5px solid var(--border-color);
+  padding-top: 12px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.barcode-strip {
+  background: #ffffff;
+  padding: 12px;
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 16px 0;
+}
+
+.barcode-digits {
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  color: #111827;
+}
