@@ -1,0 +1,426 @@
+/* SmartPark Private Parking Specific Styles */
+
+/* --- User Company Profile Session Banner --- */
+.user-profile-banner {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: 16px 22px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  box-shadow: var(--shadow-sm);
+  flex-wrap: wrap;
+}
+
+.profile-identity {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.profile-avatar-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: var(--gradient-primary);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+
+.profile-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+}
+
+.verification-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  background: var(--status-high-bg);
+  border: 1px solid var(--status-high-border);
+  color: var(--status-high-text);
+  border-radius: var(--radius-full);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.profile-meta-text {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+}
+
+.profile-switcher-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-switch-select {
+  padding: 6px 12px;
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-family: var(--font-family);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+  outline: none;
+}
+
+/* --- Company Badges & Types --- */
+.badge-company {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.badge-company-tcs {
+  background: rgba(59, 130, 246, 0.12);
+  color: #2563eb;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.badge-company-infosys {
+  background: rgba(16, 185, 129, 0.12);
+  color: #059669;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.badge-company-wipro {
+  background: rgba(245, 158, 11, 0.12);
+  color: #d97706;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.badge-company-techm {
+  background: rgba(139, 92, 246, 0.12);
+  color: #7c3aed;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+.badge-company-other {
+  background: rgba(100, 116, 139, 0.12);
+  color: #475569;
+  border: 1px solid rgba(100, 116, 139, 0.3);
+}
+
+[data-theme="dark"] .badge-company-tcs { color: #60a5fa; }
+[data-theme="dark"] .badge-company-infosys { color: #34d399; }
+[data-theme="dark"] .badge-company-wipro { color: #fbbf24; }
+[data-theme="dark"] .badge-company-techm { color: #a78bfa; }
+[data-theme="dark"] .badge-company-other { color: #94a3b8; }
+
+.badge-type-employee {
+  background: var(--primary-50);
+  color: var(--primary-600);
+  border: 1px solid var(--primary-200);
+}
+
+[data-theme="dark"] .badge-type-employee {
+  background: rgba(79, 70, 229, 0.15);
+  color: var(--primary-300);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.badge-type-visitor {
+  background: rgba(245, 158, 11, 0.1);
+  color: #b45309;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+[data-theme="dark"] .badge-type-visitor {
+  color: #fbbf24;
+}
+
+.badge-type-restricted {
+  background: rgba(239, 68, 68, 0.1);
+  color: #b91c1c;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+[data-theme="dark"] .badge-type-restricted {
+  color: #f87171;
+}
+
+/* --- Access Control Status Callout in Cards --- */
+.access-control-box {
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.8125rem;
+}
+
+.access-control-box.authorized {
+  background: var(--status-high-bg);
+  border: 1px solid var(--status-high-border);
+  color: var(--status-high-text);
+}
+
+.access-control-box.restricted {
+  background: rgba(239, 68, 68, 0.06);
+  border: 1px solid var(--status-low-border);
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .access-control-box.restricted {
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.access-control-box.visitor-req {
+  background: var(--status-med-bg);
+  border: 1px solid var(--status-med-border);
+  color: var(--status-med-text);
+}
+
+.access-icon-wrapper {
+  margin-top: 1px;
+  flex-shrink: 0;
+}
+
+.access-title-strong {
+  font-weight: 700;
+  display: block;
+  margin-bottom: 2px;
+}
+
+/* Access Permissions Summary */
+.permissions-row {
+  display: flex;
+  gap: 12px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.perm-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.perm-allowed {
+  color: var(--status-high-text);
+  font-weight: 700;
+}
+
+.perm-denied {
+  color: var(--status-low-text);
+  font-weight: 700;
+}
+
+/* --- Dedicated Visitor Parking Section --- */
+.visitor-banner-section {
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.08) 0%, rgba(6, 182, 212, 0.08) 100%);
+  border: 1.5px dashed var(--primary-400);
+  border-radius: var(--radius-xl);
+  padding: 28px 32px;
+  margin-bottom: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.visitor-banner-content h3 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.visitor-banner-content p {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  line-height: 1.5;
+}
+
+.visitor-flow-steps {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.visitor-step-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.visitor-arrow {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+/* --- Access-Based Smart Recommendation Section --- */
+.smart-recommendation-box {
+  background: var(--bg-surface);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: 24px 28px;
+  margin-bottom: 36px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.smart-rec-authorized {
+  border-color: var(--status-high-border);
+  background: linear-gradient(135deg, var(--bg-surface) 60%, rgba(16, 185, 129, 0.05) 100%);
+}
+
+.smart-rec-unauthorized {
+  border-color: var(--status-med-border);
+  background: linear-gradient(135deg, var(--bg-surface) 60%, rgba(245, 158, 11, 0.05) 100%);
+}
+
+.rec-left-content {
+  flex: 1;
+  min-width: 280px;
+}
+
+.rec-badge-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+.rec-badge-auth {
+  background: var(--status-high-bg);
+  color: var(--status-high-text);
+  border: 1px solid var(--status-high-border);
+}
+
+.rec-badge-unauth {
+  background: var(--status-med-bg);
+  color: var(--status-med-text);
+  border: 1px solid var(--status-med-border);
+}
+
+.rec-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.rec-desc {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.rec-action-wrapper {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* --- Dropdown Submenu in Navbar --- */
+.nav-dropdown {
+  position: relative;
+}
+
+.nav-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 190px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xl);
+  padding: 8px;
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 200;
+}
+
+.nav-dropdown:hover .nav-dropdown-menu,
+.nav-dropdown.active .nav-dropdown-menu {
+  display: flex;
+}
+
+.dropdown-link {
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all var(--transition-fast);
+}
+
+.dropdown-link:hover {
+  background: var(--bg-surface-hover);
+  color: var(--primary-600);
+}
+
+.dropdown-link.active {
+  background: var(--primary-50);
+  color: var(--primary-600);
+  font-weight: 700;
+}
+
+[data-theme="dark"] .dropdown-link.active {
+  background: rgba(99, 102, 241, 0.2);
+  color: var(--primary-300);
+}

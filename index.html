@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartPark — Intelligent Public, Private Parking & Authentication</title>
+  <meta name="description" content="Find available public and authorized private company parking spaces with real-time availability, secure multi-tiered access, user dashboard, and admin control on SmartPark.">
+  
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Core Stylesheets -->
+  <link rel="stylesheet" href="css/design-tokens.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/navbar-footer.css">
+  <link rel="stylesheet" href="css/home.css">
+  <link rel="stylesheet" href="css/public-parking.css">
+  <link rel="stylesheet" href="css/private-parking.css">
+  <link rel="stylesheet" href="css/login-about.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+  <!-- SmartPark Global Navbar -->
+  <header class="navbar" id="smartpark-navbar">
+    <div class="container navbar-inner">
+      <!-- Brand Logo -->
+      <a href="#/parking/public" class="navbar-brand">
+        <div class="brand-icon-wrapper">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 17V7h4a3 3 0 0 1 0 6H9"/></svg>
+        </div>
+        <span class="brand-text">SmartPark</span>
+        <span class="brand-badge" id="navbar-mode-badge">LIVE</span>
+      </a>
+
+      <!-- Desktop Navigation Menu -->
+      <nav>
+        <ul class="navbar-nav" id="navbar-nav-menu">
+          <li><a href="#home" class="nav-link" id="nav-link-home">Home</a></li>
+          
+          <!-- Find Parking with Dropdown -->
+          <li class="nav-dropdown">
+            <a href="#/parking/public" class="nav-link" id="nav-link-parking">
+              <span>Find Parking</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </a>
+            <div class="nav-dropdown-menu">
+              <a href="#/parking/public" class="dropdown-link" id="drop-link-public">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 17V7h4a3 3 0 0 1 0 6H9"/></svg>
+                Public Parking
+              </a>
+              <a href="#/parking/private" class="dropdown-link" id="drop-link-private">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                Private Parking
+              </a>
+            </div>
+          </li>
+
+          <li><a href="#/about" class="nav-link" id="nav-link-about">About</a></li>
+          <li><a href="#/dashboard" class="nav-link" id="nav-link-dashboard">Dashboard</a></li>
+          <li id="nav-item-admin" style="display: none;"><a href="#/admin" class="nav-link" id="nav-link-admin">Admin 🛡️</a></li>
+        </ul>
+      </nav>
+
+      <!-- Navbar Actions (Theme Toggle & Dynamic Auth Actions) -->
+      <div class="navbar-actions">
+        <!-- Theme Toggle -->
+        <button type="button" class="theme-toggle-btn" aria-label="Toggle Dark/Light Mode" title="Toggle theme">
+          <svg class="theme-icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="12" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="theme-icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+
+        <!-- Dynamic User Auth Action Button -->
+        <div id="nav-auth-container"></div>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button type="button" class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Open menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================== -->
+  <!-- VIEW 1: PUBLIC PARKING PAGE                -->
+  <!-- ========================================== -->
+  <main id="view-public-parking" class="container" style="flex: 1;">
+    <section class="page-header">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="#home" class="breadcrumb-item">Home</a>
+        <span class="breadcrumb-separator">/</span>
+        <a href="#/parking/public" class="breadcrumb-item">Find Parking</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-active">Public Parking</span>
+      </nav>
+
+      <div class="page-header-content">
+        <div>
+          <h1 class="page-title">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary-500);"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 17V7h4a3 3 0 0 1 0 6H9"/></svg>
+            Public Parking
+          </h1>
+          <p class="page-description">
+            Find available public parking spaces near your destination with real-time sensor streams and AI arrival occupancy predictions.
+          </p>
+        </div>
+
+        <div class="live-network-pill">
+          <span class="pulse-dot"></span>
+          <span>Live Sensor Network Active</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="search-filter-section" id="search-filter-container"></section>
+    <section class="summary-section"><div class="summary-grid" id="parking-summary-container"></div></section>
+
+    <section class="discovery-section">
+      <div class="results-header">
+        <h2 class="results-count" id="results-count-text">Showing 8 Public Parking Zones</h2>
+        <div style="font-size: 0.8125rem; color: var(--text-muted); font-weight: 600;">
+          Synced with city IoT telemetry
+        </div>
+      </div>
+
+      <div class="discovery-layout">
+        <div class="parking-list-container" id="parking-list-container"></div>
+        <div class="map-column">
+          <div id="parking-map-container" style="height: 100%;"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="prediction-section" id="prediction-section-container"></section>
+  </main>
+
+  <!-- ========================================== -->
+  <!-- VIEW 2: PRIVATE PARKING PAGE               -->
+  <!-- ========================================== -->
+  <main id="view-private-parking" class="container" style="display: none; flex: 1;">
+    <section class="page-header">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="#home" class="breadcrumb-item">Home</a>
+        <span class="breadcrumb-separator">/</span>
+        <a href="#/parking/private" class="breadcrumb-item">Find Parking</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-active">Private Parking</span>
+      </nav>
+
+      <div class="page-header-content">
+        <div>
+          <h1 class="page-title">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary-500);"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Private & Corporate Parking
+          </h1>
+          <p class="page-description">
+            Company-reserved parking facilities with strict authorization verification and instant digital QR clearance.
+          </p>
+        </div>
+
+        <div class="live-network-pill">
+          <span class="pulse-dot" style="background: #10b981;"></span>
+          <span>Access Control Active</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- User Profile Banner / Switcher -->
+    <section class="user-profile-banner" id="pvt-user-banner">
+      <div class="profile-identity">
+        <div class="profile-avatar-badge" id="pvt-profile-avatar">AS</div>
+        <div class="profile-details">
+          <div class="profile-name-row">
+            <span id="pvt-profile-name">Avinash Sharma</span>
+            <span class="verification-tag" id="pvt-profile-badge">Verified</span>
+          </div>
+          <span class="profile-meta-text" id="pvt-profile-meta">Company: TCS (Tata Consultancy Services) • ID: TCS-1024</span>
+        </div>
+      </div>
+
+      <div class="profile-switcher-wrapper">
+        <span style="font-size: 0.8125rem; font-weight: 600; color: var(--text-muted);">Switch Test Persona:</span>
+        <select id="pvt-profile-select" class="profile-switch-select">
+          <option value="demo@smartpark.com">TCS Employee (Avinash S.)</option>
+          <option value="neha@infosys.com">Infosys Employee (Neha R.)</option>
+          <option value="rahul@gmail.com">Public Citizen (Rahul M. - No Access)</option>
+          <option value="admin@smartpark.com">System Admin (Admin)</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="search-filter-section" id="pvt-search-filter-container"></section>
+    <section class="summary-section"><div class="summary-grid" id="pvt-summary-container"></div></section>
+
+    <section class="visitor-banner-section">
+      <div class="visitor-banner-content">
+        <h3>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+          Visiting a Company or Tech Campus?
+        </h3>
+        <p>Request temporary parking clearance before arriving to avoid security queues at corporate boom barriers.</p>
+        
+        <div class="visitor-flow-steps">
+          <span class="visitor-step-pill">1. Select Company</span>
+          <span class="visitor-arrow">→</span>
+          <span class="visitor-step-pill">2. Host POC</span>
+          <span class="visitor-arrow">→</span>
+          <span class="visitor-step-pill">3. Vehicle Info</span>
+          <span class="visitor-arrow">→</span>
+          <span class="visitor-step-pill">4. Instant QR Pass</span>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-primary" id="btn-banner-visitor-request" style="background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%);">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        Request Visitor Access
+      </button>
+    </section>
+
+    <section id="pvt-recommendation-container"></section>
+
+    <section class="discovery-section">
+      <div class="results-header">
+        <h2 class="results-count" id="pvt-results-count-text">Showing 7 Private Parking Facilities</h2>
+        <div style="font-size: 0.8125rem; color: var(--text-muted); font-weight: 600;">
+          Live Corporate Gate Sensors Connected
+        </div>
+      </div>
+
+      <div class="discovery-layout">
+        <div class="parking-list-container" id="pvt-parking-list-container"></div>
+        <div class="map-column">
+          <div id="pvt-parking-map-container" style="height: 100%;"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="prediction-section" id="pvt-prediction-container"></section>
+  </main>
+
+  <!-- ========================================== -->
+  <!-- VIEW 3: SEPARATE LOGIN PAGE                -->
+  <!-- ========================================== -->
+  <main id="view-login" class="container" style="display: none; flex: 1;"></main>
+
+  <!-- ========================================== -->
+  <!-- VIEW 4: SEPARATE SIGNUP PAGE               -->
+  <!-- ========================================== -->
+  <main id="view-signup" class="container" style="display: none; flex: 1;"></main>
+
+  <!-- ========================================== -->
+  <!-- VIEW 5: USER DASHBOARD                     -->
+  <!-- ========================================== -->
+  <main id="view-dashboard" class="container" style="display: none; flex: 1;"></main>
+
+  <!-- ========================================== -->
+  <!-- VIEW 6: ABOUT PAGE                         -->
+  <!-- ========================================== -->
+  <main id="view-about" class="container" style="display: none; flex: 1;"></main>
+
+  <!-- ========================================== -->
+  <!-- VIEW 7: ADMIN MANAGEMENT CONSOLE           -->
+  <!-- ========================================== -->
+  <main id="view-admin" class="container" style="display: none; flex: 1;"></main>
+
+  <!-- ========================================== -->
+  <!-- VIEW 8: HOME PAGE (REFERENCE)              -->
+  <!-- ========================================== -->
+  <div id="view-home" class="container" style="display: none; flex: 1;">
+    <section class="home-hero">
+      <div class="hero-pill">
+        <span class="pulse-dot" style="width: 6px; height: 6px;"></span>
+        Next-Generation Smart Mobility Platform
+      </div>
+      <h1 class="hero-title">
+        Intelligent Parking for <span class="hero-gradient-text">Smart Cities</span>
+      </h1>
+      <p class="hero-subtitle">
+        Eliminate circling for parking. Discover real-time municipal bays, book guaranteed slots, and leverage AI predictive arrival occupancy.
+      </p>
+      <div class="hero-actions">
+        <a href="#/parking/public" class="btn btn-primary btn-lg">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Explore Public Parking
+        </a>
+        <a href="#/parking/private" class="btn btn-secondary btn-lg">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Corporate & Private Parking
+        </a>
+      </div>
+    </section>
+
+    <div class="home-features-grid">
+      <div class="feature-card">
+        <div class="feature-icon-box">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+        </div>
+        <h3 class="feature-title">AI Availability Forecast</h3>
+        <p class="feature-desc">Machine learning algorithms forecast spot availability up to 60 minutes ahead so you never arrive at a full lot.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon-box">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <h3 class="feature-title">Corporate & Private Access</h3>
+        <p class="feature-desc">Seamless employee ID validation, company badge integration, and temporary visitor passes for corporate facilities.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon-box">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+        <h3 class="feature-title">Contactless QR Entry</h3>
+        <p class="feature-desc">Frictionless entry and exit with automated boom barrier ANPR cameras and instant digital QR passes.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SmartPark Global Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div class="brand-icon-wrapper" style="width: 32px; height: 32px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 17V7h4a3 3 0 0 1 0 6H9"/></svg>
+            </div>
+            <span style="font-weight: 800; font-size: 1.2rem; color: var(--text-primary);">SmartPark</span>
+          </div>
+          <p>Smart civic mobility and real-time public & corporate parking intelligence for modern connected cities.</p>
+        </div>
+
+        <div class="footer-column">
+          <h4>Find Parking</h4>
+          <ul class="footer-links">
+            <li><a href="#/parking/public" class="footer-link">Public Parking</a></li>
+            <li><a href="#/parking/private" class="footer-link">Private & Corporate</a></li>
+            <li><a href="#/dashboard" class="footer-link">User Dashboard</a></li>
+            <li><a href="#/admin" class="footer-link">Admin Console</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-column">
+          <h4>Platform</h4>
+          <ul class="footer-links">
+            <li><a href="#/about" class="footer-link">About SmartPark</a></li>
+            <li><a href="#/about" class="footer-link">How it Works</a></li>
+            <li><a href="#/about" class="footer-link">Privacy Policy</a></li>
+            <li><a href="#/about" class="footer-link">Terms of Service</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-column">
+          <h4>Network Health</h4>
+          <div class="footer-status-card">
+            <div class="footer-status-header">
+              <span class="pulse-dot"></span>
+              <span>15 Total Zones Monitored</span>
+            </div>
+            <p style="font-size: 0.8125rem; color: var(--text-muted); line-height: 1.4;">
+              Public & Private Gate Sensors: 100% online • 99.98% operational uptime across city and corporate campuses.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>&copy; 2026 SmartPark Inc. All rights reserved.</span>
+        <div style="display: flex; gap: 16px;">
+          <a href="#/about" class="footer-link">Status</a>
+          <a href="#/about" class="footer-link">Support</a>
+          <a href="#/admin" class="footer-link">Admin Access</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Application Root Script -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
