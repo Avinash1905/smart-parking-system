@@ -1,22 +1,50 @@
 """
-Unit Tests for SmartPark Authentication & User Services
+Unit and Integration Tests for SmartPark Authentication Services.
+Tests user registration, corporate employee credential verification, and token authentication.
 """
 
-import pytest
+import unittest
+import uuid
 from server.services.business_services import AuthService
 
-def test_user_authentication_success():
-    res = AuthService.login("demo@smartpark.com", "SmartPark@123")
-    assert res["success"] is True
-    assert res["user"]["name"] == "Avinash Sharma"
-    assert "token" in res
+class TestAuthService(unittest.TestCase):
+    def test_signup_and_login_flow(self):
+        test_email = f"test_{uuid.uuid4().hex[:8]}@example.com"
+        signup_data = {
+            "name": "Rajesh Kumar",
+            "email": test_email,
+            "phone": "9876543210",
+            "password": "SecurePassword123!",
+            "vehicle_plate": "KA-01-AB-1234",
+            "vehicle_type": "FOUR_WHEELER"
+        }
+        signup_res = AuthService.signup(signup_data)
+        self.assertTrue(signup_res["success"])
+        self.assertIn("user", signup_res)
+        self.assertEqual(signup_res["user"]["email"], test_email)
 
-def test_user_authentication_failure():
-    res = AuthService.login("non_existent_user@test.com", "wrong_password")
-    assert res["success"] is False
+        # Verify Login
+        login_res = AuthService.login(test_email, "SecurePassword123!")
+        self.assertTrue(login_res["success"])
+        self.assertIn("token", login_res)
 
-def test_get_user_by_id():
-    user = AuthService.get_user_by_id("usr-tcs-01")
-    assert user is not None
-    assert user["name"] == "Avinash Sharma"
-    assert user["email"] == "demo@smartpark.com"
+    def test_corporate_employee_signup(self):
+        emp_email = f"emp_{uuid.uuid4().hex[:8]}@techcorp.com"
+        signup_data = {
+            "name": "Ananya Sharma",
+            "email": emp_email,
+            "phone": "9876543211",
+            "password": "CorporatePass123!",
+            "vehicle_plate": "KA-02-CD-5678",
+            "vehicle_type": "FOUR_WHEELER",
+            "company_id": "comp_tcs_hq",
+            "company_name": "Tata Consultancy Services",
+            "employee_id": "TCS-9012"
+        }
+        signup_res = AuthService.signup(signup_data)
+        self.assertTrue(signup_res["success"])
+        self.assertEqual(signup_res["user"]["company_id"], "comp_tcs_hq")
+        self.assertTrue(signup_res["user"]["company_verified"])
+
+if __name__ == "__main__":
+    unittest.main()

@@ -3,6 +3,13 @@
  * Contains user metrics, active reservations, recent parking history, and saved vehicles.
  */
 
+export const DASHBOARD_SUMMARY_DATA = {
+  availableNearbySpaces: 248,
+  activeReservationsCount: 1,
+  totalHoursParked: 24,
+  totalSavedVehicles: 2
+};
+
 export const DASHBOARD_METRICS = {
   availableParking: 248,
   activeReservations: 1,

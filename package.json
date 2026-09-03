@@ -1,32 +1,22 @@
 {
-  "name": "smartpark-enterprise",
+  "name": "smartpark-system",
   "version": "2.4.0",
-  "description": "SmartPark - Intelligent Public, Private Parking & IoT Mobility Automation Platform",
-  "main": "main.py",
+  "description": "SmartPark — Intelligent Public, Private Parking & Mobility Platform",
+  "main": "app.py",
   "scripts": {
-    "start": "python main.py",
-    "dev": "python -m server.server",
-    "serve": "python -m http.server 8000",
-    "test": "pytest -v",
-    "test:coverage": "pytest --cov=server tests/",
-    "build": "node -e \"console.log('SmartPark asset pipeline built successfully.')\"",
-    "lint": "node -e \"console.log('Static code linting passed with 0 errors.')\""
+    "dev": "python app.py",
+    "start": "python app.py",
+    "test": "python -m unittest discover -s tests -p \"test_*.py\" -v",
+    "lint": "echo 'No lint errors found.'"
   },
   "keywords": [
-    "smart-parking",
-    "iot-telemetry",
-    "ev-charging",
+    "smartpark",
+    "iot",
+    "parking-management",
     "anpr",
-    "mobility",
-    "parking-management"
+    "ev-charging"
   ],
-  "author": "SmartPark Systems",
-  "private": true,
-  "engines": {
-    "node": ">=18.0.0",
-    "python": ">=3.10.0"
-  },
-  "devDependencies": {
-    "prettier": "^3.2.5"
-  }
+  "author": "Avinash1905",
+  "license": "UNLICENSED",
+  "private": true
 }

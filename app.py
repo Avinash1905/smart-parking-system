@@ -1,28 +1,31 @@
+#!/usr/bin/env python3
 """
-SmartPark Platform - Production Application Entry Point
-Initializes SQLite database schemas, starts the multi-threaded HTTP server, and mounts REST endpoints.
+SmartPark Main Application Entrypoint
+Launches the full-stack SmartPark HTTP server and API backend.
 """
 
-import os
 import sys
-import socketserver
-import urllib.parse
-from server.server import SmartParkRequestHandler, PORT, STATIC_DIR
+import os
 
-def run_server(port=PORT):
-    server_address = ('', port)
-    socketserver.ThreadingTCPServer.allow_reuse_address = True
-    httpd = socketserver.ThreadingTCPServer(server_address, SmartParkRequestHandler)
-    print("=================================================================")
-    print(f"  🚀 SMARTPARK ENTERPRISE SERVER RUNNING ON http://localhost:{port}")
-    print(f"  📁 Serving Frontend Assets & REST APIs from: {STATIC_DIR}")
-    print("=================================================================")
+# Ensure UTF-8 output on Windows console
+if sys.platform == "win32" and hasattr(sys.stdout, "reconfigure"):
     try:
-        httpd.serve_forever()
-    except KeyboardInterrupt:
-        print("\n[SMARTPARK] Gracefully shutting down server.")
-        httpd.server_close()
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+if BASE_DIR not in sys.path:
+    sys.path.insert(0, BASE_DIR)
+
+from server.server import run_server
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
-    run_server(port)
+    print("=" * 60)
+    print("[SMARTPARK] Intelligent Parking & Mobility Platform")
+    print(f"[SMARTPARK] Server running at http://127.0.0.1:{port}")
+    print(f"[SMARTPARK] Serving web application from: {BASE_DIR}")
+    print("=" * 60)
+    run_server(port=port)

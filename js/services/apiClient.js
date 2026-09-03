@@ -4,9 +4,9 @@
  * automatic token management, and error interceptors.
  */
 
-const API_BASE_URL = window.location.origin.includes('localhost') 
-  ? window.location.origin 
-  : 'http://localhost:8085';
+const API_BASE_URL = (typeof window !== 'undefined' && window.location && window.location.origin)
+  ? window.location.origin
+  : 'http://127.0.0.1:8000';
 
 export const apiClient = {
   async get(endpoint, params = {}) {
