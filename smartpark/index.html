@@ -1,0 +1,1307 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartPark ΓÇö Smart Parking Management & Prediction System</title>
+  <meta name="description" content="SmartPark helps you find available parking spaces, predict parking availability, and reserve your space before you arrive." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%232563eb'/><text y='.9em' font-size='72' x='12' fill='white' font-family='Arial' font-weight='bold'>P</text></svg>" />
+</head>
+<body>
+
+<!-- ============================================================
+     TOAST CONTAINER
+     ============================================================ -->
+<div class="toast-container" id="toast-container" role="alert" aria-live="polite"></div>
+
+<!-- ============================================================
+     MODAL OVERLAY (shared)
+     ============================================================ -->
+<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal" id="modal-box">
+    <div class="modal-header">
+      <h3 id="modal-title">Modal</h3>
+      <button class="modal-close" id="modal-close-btn" aria-label="Close modal">Γ£ò</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer" id="modal-footer" style="display:none;"></div>
+  </div>
+</div>
+
+<!-- Sidebar Overlay (mobile) -->
+<div id="sidebar-overlay" aria-hidden="true"></div>
+
+<!-- ============================================================
+     LANDING PAGE (shown before login)
+     ============================================================ -->
+<div id="landing-page" class="view active">
+  <!-- Navbar -->
+  <nav class="landing-nav" role="navigation">
+    <div class="landing-logo">
+      <div class="logo-p" aria-hidden="true">≡ƒà┐</div>
+      SmartPark
+    </div>
+    <ul class="landing-nav-links" role="list">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="find-parking.html">Find Parking</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+    <div class="landing-nav-actions">
+      <button class="btn-hero-outline" id="landing-login-btn">Login</button>
+      <button class="btn-hero-primary" id="landing-signup-btn">Get Started</button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span>≡ƒ¢░</span> Smart City Parking Solution
+      </div>
+      <h1>SMARTPARK</h1>
+      <p class="hero-tagline">Park Smarter. Arrive Faster.</p>
+      <p>Find available parking spaces, predict parking availability, and reserve your space before you arrive. Real-time occupancy monitoring powered by IoT sensors and ML predictions.</p>
+      <div class="hero-actions">
+        <button class="btn-hero-primary" id="hero-find-btn" onclick="window.location.href='find-parking.html'">
+          ≡ƒöì Find Parking
+        </button>
+        <button class="btn-hero-outline" id="hero-dashboard-btn">
+          ≡ƒôè Explore Dashboard
+        </button>
+      </div>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <div class="parking-map-visual">
+        <div class="map-header">
+          <h3>≡ƒù║ Live Parking Map</h3>
+          <div class="live-badge">LIVE</div>
+        </div>
+        <div class="parking-grid-visual" id="hero-grid"></div>
+        <div class="zone-stats-visual">
+          <div class="zone-stat av"><div class="zs-name">Zone A</div><div class="zs-pct">92%</div></div>
+          <div class="zone-stat mo"><div class="zs-name">Zone B</div><div class="zs-pct">67%</div></div>
+          <div class="zone-stat av"><div class="zs-name">Zone C</div><div class="zs-pct">35%</div></div>
+          <div class="zone-stat hi"><div class="zs-name">Zone D</div><div class="zs-pct">81%</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <div class="hero-stats">
+    <div class="hero-stat-card">
+      <div class="stat-number" data-count="850">0</div>
+      <div class="stat-label">Parking Spaces</div>
+    </div>
+    <div class="hero-stat-card">
+      <div class="stat-number">24/7</div>
+      <div class="stat-label">Monitoring</div>
+    </div>
+    <div class="hero-stat-card">
+      <div class="stat-number" data-count="95">0</div>
+      <div class="stat-label">Prediction Accuracy %</div>
+    </div>
+    <div class="hero-stat-card">
+      <div class="stat-number" data-count="2800">0</div>
+      <div class="stat-label">Active Users</div>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <section class="landing-section" id="features">
+    <div class="section-header">
+      <span class="section-tag">Features</span>
+      <h2>Everything You Need to Park Smarter</h2>
+      <p>SmartPark combines real-time IoT data, AI predictions, and a seamless UX to make parking effortless.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">≡ƒö┤</div>
+        <h3>Real-Time Occupancy</h3>
+        <p>Live updates from IoT sensors give you the exact availability of every parking slot before you arrive.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">≡ƒñû</div>
+        <h3>AI Predictions</h3>
+        <p>Our ML model predicts parking availability up to 3 hours in advance with 95% accuracy.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">≡ƒô▒</div>
+        <h3>Instant Reservations</h3>
+        <p>Reserve your spot in seconds and get a digital QR pass that grants you entry on arrival.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">≡ƒù║</div>
+        <h3>Interactive Map</h3>
+        <p>Navigate to any parking zone with a live map showing occupancy color-coded by availability status.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">≡ƒöö</div>
+        <h3>Smart Alerts</h3>
+        <p>Get notified before your parking expires, when your preferred zone opens up, or when full zones clear.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">ΓÜí</div>
+        <h3>EV Charging</h3>
+        <p>Filter for EV-compatible slots and see charging availability and real-time charger status.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="landing-section" id="how-it-works" style="padding-top:0;">
+    <div class="section-header">
+      <span class="section-tag">How It Works</span>
+      <h2>Park in 4 Simple Steps</h2>
+      <p>From search to slot in under 2 minutes.</p>
+    </div>
+    <div class="how-steps">
+      <div class="how-step">
+        <div class="step-number">1</div>
+        <h3>Search</h3>
+        <p>Enter your destination or search nearby zones. See real-time availability instantly.</p>
+      </div>
+      <div class="how-step">
+        <div class="step-number">2</div>
+        <h3>Compare</h3>
+        <p>View occupancy, distance, price, and predicted availability side-by-side.</p>
+      </div>
+      <div class="how-step">
+        <div class="step-number">3</div>
+        <h3>Reserve</h3>
+        <p>Select your slot, time, and vehicle. Confirm your reservation in one tap.</p>
+      </div>
+      <div class="how-step">
+        <div class="step-number">4</div>
+        <h3>Park</h3>
+        <p>Scan your QR pass at the gate and your reserved slot is yours. No queues, no stress.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <div class="landing-cta" id="about">
+    <h2>Ready to Park Smarter?</h2>
+    <p>Join over 2,800 drivers who use SmartPark every day to save time and reduce parking stress.</p>
+    <div class="cta-actions">
+      <button class="btn-hero-primary" id="cta-signup-btn">≡ƒÜÇ Create Free Account</button>
+      <button class="btn-hero-outline" id="cta-login-btn">Already have an account? Login</button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="landing-footer" role="contentinfo">
+    <div>┬⌐ 2026 SmartPark. Smart Parking Management & Prediction System.</div>
+    <div>≡ƒà┐ Built with HTML5, CSS3 &amp; JavaScript</div>
+  </footer>
+</div>
+
+<!-- ============================================================
+     LOGIN PAGE
+     ============================================================ -->
+<div id="login-page" class="view">
+  <div class="auth-page">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <div class="logo-p">≡ƒà┐</div>
+        SmartPark
+      </div>
+      <h2>Welcome Back</h2>
+      <p class="auth-subtitle">Sign in to your account to continue.</p>
+      <form id="login-form" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="login-email">Email Address</label>
+          <div class="input-with-icon">
+            <span class="input-icon">Γ£ë</span>
+            <input type="email" id="login-email" class="form-control" placeholder="you@example.com" autocomplete="email" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="login-password">Password</label>
+          <div class="input-with-icon">
+            <span class="input-icon">≡ƒöÆ</span>
+            <input type="password" id="login-password" class="form-control" placeholder="Enter your password" autocomplete="current-password" required />
+          </div>
+        </div>
+        <div class="d-flex justify-between align-center mb-20">
+          <label class="form-check">
+            <input type="checkbox" id="login-remember" />
+            Remember me
+          </label>
+          <a href="#" style="font-size:.85rem;color:var(--primary);">Forgot password?</a>
+        </div>
+        <div id="login-error" class="error-state" style="display:none;padding:12px 0;">
+          <p id="login-error-msg" style="color:var(--danger);font-size:.85rem;"></p>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block btn-lg">Login</button>
+        <p style="text-align:center;margin-top:20px;font-size:.875rem;color:var(--text-secondary);">
+          Don't have an account?
+          <button type="button" id="goto-register" style="color:var(--primary);font-weight:600;background:none;border:none;cursor:pointer;">Create Account</button>
+        </p>
+        <div class="divider"></div>
+        <p style="text-align:center;font-size:.78rem;color:var(--text-muted);margin-bottom:12px;">Demo credentials:</p>
+        <div class="d-flex gap-8">
+          <button type="button" class="btn btn-secondary btn-sm flex-1" id="demo-user-btn">≡ƒæñ User Demo</button>
+          <button type="button" class="btn btn-secondary btn-sm flex-1" id="demo-admin-btn">≡ƒöº Admin Demo</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     REGISTER PAGE
+     ============================================================ -->
+<div id="register-page" class="view">
+  <div class="auth-page">
+    <div class="auth-card" style="max-width:480px;">
+      <div class="auth-logo">
+        <div class="logo-p">≡ƒà┐</div>
+        SmartPark
+      </div>
+      <h2>Create Account</h2>
+      <p class="auth-subtitle">Join SmartPark and start parking smarter.</p>
+      <form id="register-form" novalidate>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="reg-fname">First Name</label>
+            <input type="text" id="reg-fname" class="form-control" placeholder="First name" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="reg-lname">Last Name</label>
+            <input type="text" id="reg-lname" class="form-control" placeholder="Last name" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="reg-email">Email Address</label>
+          <input type="email" id="reg-email" class="form-control" placeholder="you@example.com" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="reg-phone">Phone Number</label>
+          <input type="tel" id="reg-phone" class="form-control" placeholder="+91 9876543210" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="reg-password">Password</label>
+          <input type="password" id="reg-password" class="form-control" placeholder="Min 8 characters" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="reg-confirm">Confirm Password</label>
+          <input type="password" id="reg-confirm" class="form-control" placeholder="Repeat password" required />
+        </div>
+        <div id="register-error" style="display:none;color:var(--danger);font-size:.85rem;margin-bottom:14px;"></div>
+        <button type="submit" class="btn btn-primary btn-block btn-lg">Create Account</button>
+        <p style="text-align:center;margin-top:20px;font-size:.875rem;color:var(--text-secondary);">
+          Already have an account?
+          <button type="button" id="goto-login" style="color:var(--primary);font-weight:600;background:none;border:none;cursor:pointer;">Login</button>
+        </p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     APP SHELL (Authenticated)
+     ============================================================ -->
+<div id="app-shell" style="display:none;">
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar" role="navigation" aria-label="Main navigation">
+    <div class="sidebar-logo">
+      <div class="logo-icon" aria-hidden="true">≡ƒà┐</div>
+      <div class="logo-text">
+        SmartPark
+        <span>Smart Parking</span>
+      </div>
+    </div>
+
+    <!-- View Toggle (User / Admin) -->
+    <div class="sidebar-view-toggle" role="group" aria-label="Switch view">
+      <button id="user-view-btn" class="active" aria-pressed="true">≡ƒæñ User</button>
+      <button id="admin-view-btn" aria-pressed="false">≡ƒöº Admin</button>
+    </div>
+
+    <!-- User Navigation -->
+    <div id="user-nav">
+      <div class="sidebar-section-label">User Menu</div>
+      <ul class="sidebar-nav" role="list">
+        <li><button class="nav-item active" data-view="user-dashboard" role="menuitem">
+          <span class="nav-icon" aria-hidden="true">≡ƒÅá</span> Dashboard
+        </button></li>
+        <li><button class="nav-item" data-view="find-parking" role="menuitem">
+          <span class="nav-icon" aria-hidden="true">≡ƒöì</span> Find Parking
+        </button></li>
+        <li><button class="nav-item" data-view="live-map" role="menuitem">
+          <span class="nav-icon" aria-hidden="true">≡ƒù║</span> Live Map
+        </button></li>
+        <li><button class="nav-item" data-view="reservations" role="menuitem">
+          <span class="nav-icon" aria-hidden="true">≡ƒôà</span> Reservations
+        </button></li>
+        <li><button class="nav-item" data-view="vehicles" role="menuitem">
+          <span class="nav-icon" aria-hidden="true">≡ƒÜù</span> Vehicles
+        </button></li>
+        <li><button class="nav-item" data-view="parking-history" role="menuitem">
+          <span class="nav-icon" aria-hidden="true">≡ƒôï</span> Parking History
+        </button></li>
+        <li><button class="nav-item" data-view="notifications" role="menuitem">
+          <span class="nav-icon" aria-hidden="true">≡ƒöö</span> Notifications
+          <span class="nav-badge" id="notif-badge">2</span>
+        </button></li>
+        <li><button class="nav-item" data-view="profile" role="menuitem">
+          <span class="nav-icon" aria-hidden="true">≡ƒæñ</span> Profile
+        </button></li>
+      </ul>
+    </div>
+
+    <!-- Admin Navigation -->
+    <div id="admin-nav" style="display:none;">
+      <div class="sidebar-section-label">Admin Menu</div>
+      <ul class="sidebar-nav" role="list">
+        <li><button class="nav-item" data-view="admin-dashboard" role="menuitem">
+          <span class="nav-icon" aria-hidden="true">≡ƒôè</span> Admin Dashboard
+        </button></li>
+        <li><button class="nav-item" data-view="admin-zones" role="menuitem">
+          <span class="nav-icon" aria-hidden="true">≡ƒà┐</span> Parking Zones
+        </button></li>
+        <li><button class="nav-item" data-view="admin-occupancy" role="menuitem">
+          <span class="nav-icon" aria-hidden="true">≡ƒôí</span> Live Occupancy
+        </button></li>
+        <li><button class="nav-item" data-view="admin-reservations" role="menuitem">
+          <span class="nav-icon" aria-hidden="true">≡ƒôà</span> Reservations
+        </button></li>
+        <li><button class="nav-item" data-view="admin-users" role="menuitem">
+          <span class="nav-icon" aria-hidden="true">≡ƒæÑ</span> Users
+        </button></li>
+        <li><button class="nav-item" data-view="admin-violations" role="menuitem">
+          <span class="nav-icon" aria-hidden="true">ΓÜá</span> Violations
+        </button></li>
+        <li><button class="nav-item" data-view="admin-alerts" role="menuitem">
+          <span class="nav-icon" aria-hidden="true">≡ƒöö</span> Alerts
+        </button></li>
+        <li><button class="nav-item" data-view="admin-analytics" role="menuitem">
+          <span class="nav-icon" aria-hidden="true">≡ƒôê</span> Analytics
+        </button></li>
+        <li><button class="nav-item" data-view="admin-predictions" role="menuitem">
+          <span class="nav-icon" aria-hidden="true">≡ƒñû</span> Predictions
+        </button></li>
+        <li><button class="nav-item" data-view="admin-sensor" role="menuitem">
+          <span class="nav-icon" aria-hidden="true">≡ƒ¢░</span> Sensor Simulator
+        </button></li>
+        <li><button class="nav-item" data-view="admin-settings" role="menuitem">
+          <span class="nav-icon" aria-hidden="true">ΓÜÖ</span> Settings
+        </button></li>
+      </ul>
+    </div>
+
+    <!-- Sidebar Footer -->
+    <div class="sidebar-footer">
+      <button class="nav-item" id="logout-btn" style="width:100%;">
+        <span class="nav-icon" aria-hidden="true">≡ƒÜ¬</span> Logout
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <div id="main-content">
+    <!-- Top Header -->
+    <header id="top-header" role="banner">
+      <button id="hamburger-btn" aria-label="Toggle sidebar" aria-expanded="false">Γÿ░</button>
+      <div class="header-title" id="header-title">Dashboard</div>
+      <div class="header-actions">
+        <!-- Dark mode toggle -->
+        <button class="icon-btn" id="theme-toggle-btn" aria-label="Toggle dark mode" title="Toggle dark/light mode">≡ƒîÖ</button>
+        <!-- Notifications -->
+        <button class="icon-btn" id="header-notif-btn" aria-label="Notifications" data-view="notifications">
+          ≡ƒöö
+          <span class="notif-dot" id="header-notif-dot"></span>
+        </button>
+        <!-- User dropdown -->
+        <div class="dropdown">
+          <button class="avatar-btn" id="avatar-btn" aria-label="User menu" aria-haspopup="true" aria-expanded="false">U</button>
+          <div class="dropdown-menu" id="user-dropdown">
+            <div class="dropdown-item" data-view="profile">≡ƒæñ Profile</div>
+            <div class="dropdown-item" data-view="admin-settings">ΓÜÖ Settings</div>
+            <div class="dropdown-divider"></div>
+            <div class="dropdown-item" id="dropdown-logout">≡ƒÜ¬ Logout</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- PAGE VIEWS -->
+    <main class="page-content" id="page-content" role="main">
+
+      <!-- ====================================================
+           USER DASHBOARD
+           ==================================================== -->
+      <section id="view-user-dashboard" class="view active">
+        <div class="page-header">
+          <h1><span class="greeting-emoji" id="greeting-emoji">≡ƒæï</span><span id="greeting-text">Good morning</span>, <span id="greeting-name">User</span>!</h1>
+          <p>Find your perfect parking spot. Here's what's happening today.</p>
+        </div>
+        <!-- Stats -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-card-header">
+              <div>
+                <div class="stat-card-label">Available Spaces</div>
+                <div class="stat-card-value" id="dash-available">236</div>
+              </div>
+              <div class="stat-card-icon green">≡ƒƒó</div>
+            </div>
+            <div class="stat-card-change up">Γåæ 12 since last hour</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-header">
+              <div>
+                <div class="stat-card-label">Occupied</div>
+                <div class="stat-card-value" id="dash-occupied">614</div>
+              </div>
+              <div class="stat-card-icon red">≡ƒö┤</div>
+            </div>
+            <div class="stat-card-change down">Γåô 12 since last hour</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-header">
+              <div>
+                <div class="stat-card-label">My Reservations</div>
+                <div class="stat-card-value" id="dash-reservations">1</div>
+              </div>
+              <div class="stat-card-icon blue">≡ƒôà</div>
+            </div>
+            <div class="stat-card-change up">Active today</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-header">
+              <div>
+                <div class="stat-card-label">Alerts</div>
+                <div class="stat-card-value" id="dash-alerts">2</div>
+              </div>
+              <div class="stat-card-icon orange">≡ƒöö</div>
+            </div>
+            <div class="stat-card-change">Unread notifications</div>
+          </div>
+        </div>
+
+        <!-- Grid: Occupancy + Recommendation -->
+        <div class="grid-2" style="margin-bottom:24px;">
+          <div class="card">
+            <div class="card-header">
+              <h3>≡ƒù║ Live Occupancy</h3>
+              <div class="live-indicator"><div class="live-dot"></div> LIVE</div>
+            </div>
+            <div class="card-body">
+              <div class="zone-list" id="dashboard-zone-list"></div>
+            </div>
+          </div>
+          <div>
+            <div class="recommendation-card" id="rec-card">
+              <div class="rec-label">Γ¡É BEST MATCH</div>
+              <div class="rec-zone-name" id="rec-zone">Zone C</div>
+              <div class="rec-details">
+                <div class="rec-detail">≡ƒƒó <span id="rec-available">72</span> spaces available</div>
+                <div class="rec-detail">≡ƒôì <span id="rec-distance">240m</span> away</div>
+                <div class="rec-detail">≡ƒÜ╢ <span id="rec-walk">3 min</span> walk</div>
+              </div>
+              <div style="font-size:.82rem;opacity:.88;margin-bottom:6px;">Predicted occupancy in 30 min: <strong id="rec-pred">52%</strong></div>
+              <div class="rec-score-row">
+                <div>
+                  <div class="rec-score-label">Recommendation Score</div>
+                  <div class="rec-score-value" id="rec-score">91<span style="font-size:1rem;">/100</span></div>
+                </div>
+                <div class="score-bar">
+                  <div class="score-bar-fill" id="rec-score-bar" style="width:91%;"></div>
+                </div>
+              </div>
+              <button class="btn btn-secondary btn-block mt-16" id="dash-park-here-btn">≡ƒà┐ Park Here</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="card">
+          <div class="card-header">
+            <h3>≡ƒôï Recent Activity</h3>
+            <button class="btn btn-ghost btn-sm" data-view="parking-history">View All</button>
+          </div>
+          <div class="card-body p-0">
+            <div id="dashboard-recent-activity"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================
+           FIND PARKING
+           ==================================================== -->
+      <section id="view-find-parking" class="view">
+        <div class="page-header">
+          <h1>≡ƒöì Find Parking</h1>
+          <p>Search for available parking zones near your destination.</p>
+        </div>
+        <div class="search-bar">
+          <span class="search-icon" aria-hidden="true">≡ƒöì</span>
+          <input type="text" id="parking-search-input" placeholder="Search destination, zone name or area..." aria-label="Search parking" />
+        </div>
+        <!-- Filters -->
+        <div class="filter-row" role="group" aria-label="Filters">
+          <button class="filter-chip active" data-filter="all">All Zones</button>
+          <button class="filter-chip" data-filter="available">≡ƒƒó Available</button>
+          <button class="filter-chip" data-filter="moderate">≡ƒƒí Moderate</button>
+          <button class="filter-chip" data-filter="ev">ΓÜí EV Charging</button>
+          <button class="filter-chip" data-filter="accessible">ΓÖ┐ Accessible</button>
+          <button class="filter-chip" data-filter="covered">≡ƒÅá Covered</button>
+        </div>
+        <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;">
+          <select class="form-control" id="filter-distance" style="width:auto;min-width:150px;" aria-label="Filter by distance">
+            <option value="">Any Distance</option>
+            <option value="200">Within 200m</option>
+            <option value="500">Within 500m</option>
+            <option value="1000">Within 1km</option>
+          </select>
+          <select class="form-control" id="filter-vehicle" style="width:auto;min-width:150px;" aria-label="Filter by vehicle type">
+            <option value="">All Vehicle Types</option>
+            <option value="car">≡ƒÜù Car</option>
+            <option value="bike">≡ƒÅì Motorcycle</option>
+            <option value="ev">ΓÜí EV</option>
+            <option value="truck">≡ƒÜ¢ Truck/SUV</option>
+          </select>
+          <select class="form-control" id="filter-sort" style="width:auto;min-width:150px;" aria-label="Sort results">
+            <option value="score">Best Match</option>
+            <option value="distance">Nearest First</option>
+            <option value="availability">Most Available</option>
+            <option value="price">Lowest Price</option>
+          </select>
+        </div>
+        <div id="parking-results" class="parking-results-grid"></div>
+        <div id="parking-empty" class="empty-state" style="display:none;">
+          <div class="empty-icon">≡ƒà┐</div>
+          <h3>No parking zones found</h3>
+          <p>Try adjusting your search or filters.</p>
+          <button class="btn btn-primary" id="clear-search-btn">Clear Search</button>
+        </div>
+      </section>
+
+      <!-- ====================================================
+           LIVE MAP
+           ==================================================== -->
+      <section id="view-live-map" class="view">
+        <div class="page-header">
+          <h1>≡ƒù║ Live Parking Map</h1>
+          <p>Interactive real-time view of all parking zones and individual slots.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start;">
+          <div class="map-container">
+            <div class="map-toolbar">
+              <div class="map-legend" role="list">
+                <div class="legend-item" role="listitem"><div class="legend-dot" style="background:var(--status-available);"></div> Available</div>
+                <div class="legend-item" role="listitem"><div class="legend-dot" style="background:var(--status-moderate);"></div> Moderate</div>
+                <div class="legend-item" role="listitem"><div class="legend-dot" style="background:var(--status-high);"></div> High</div>
+                <div class="legend-item" role="listitem"><div class="legend-dot" style="background:var(--status-full);"></div> Full</div>
+                <div class="legend-item" role="listitem"><div class="legend-dot" style="background:var(--status-closed);"></div> Closed</div>
+              </div>
+              <div class="live-indicator"><div class="live-dot"></div> LIVE</div>
+            </div>
+            <div class="map-area" id="map-area"></div>
+          </div>
+
+          <!-- Zone Info Panel -->
+          <div class="map-zone-info-panel">
+            <div class="card">
+              <div class="card-header">
+                <h3 id="zone-info-name">Select a Zone</h3>
+              </div>
+              <div class="card-body" id="zone-info-body">
+                <div class="empty-state" style="padding:24px 0;">
+                  <div class="empty-icon">≡ƒæå</div>
+                  <p>Click on a parking zone to see details.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================
+           RESERVATIONS (User)
+           ==================================================== -->
+      <section id="view-reservations" class="view">
+        <div class="page-header d-flex justify-between align-center">
+          <div>
+            <h1>≡ƒôà My Reservations</h1>
+            <p>Manage your current and upcoming parking reservations.</p>
+          </div>
+          <button class="btn btn-primary" id="new-reservation-btn">+ New Reservation</button>
+        </div>
+
+        <!-- Stepper (shown when creating reservation) -->
+        <div id="reservation-creator" style="display:none;">
+          <div class="card mb-20">
+            <div class="card-body">
+              <div class="reservation-stepper" id="res-stepper">
+                <div class="step-wrap">
+                  <div class="step-circle active" id="step-c-1">1</div>
+                  <div class="step-label active" id="step-l-1">Zone</div>
+                </div>
+                <div class="step-connector" id="step-con-1"></div>
+                <div class="step-wrap">
+                  <div class="step-circle" id="step-c-2">2</div>
+                  <div class="step-label" id="step-l-2">Date & Time</div>
+                </div>
+                <div class="step-connector" id="step-con-2"></div>
+                <div class="step-wrap">
+                  <div class="step-circle" id="step-c-3">3</div>
+                  <div class="step-label" id="step-l-3">Vehicle</div>
+                </div>
+                <div class="step-connector" id="step-con-3"></div>
+                <div class="step-wrap">
+                  <div class="step-circle" id="step-c-4">4</div>
+                  <div class="step-label" id="step-l-4">Confirm</div>
+                </div>
+              </div>
+              <div id="reservation-step-content"></div>
+              <div class="d-flex gap-12 mt-16">
+                <button class="btn btn-secondary" id="res-back-btn" style="display:none;">ΓåÉ Back</button>
+                <button class="btn btn-primary" id="res-next-btn">Next ΓåÆ</button>
+                <button class="btn btn-ghost" id="res-cancel-btn">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Existing Reservations -->
+        <div id="reservations-list"></div>
+      </section>
+
+      <!-- ====================================================
+           VEHICLES
+           ==================================================== -->
+      <section id="view-vehicles" class="view">
+        <div class="page-header d-flex justify-between align-center">
+          <div>
+            <h1>≡ƒÜù My Vehicles</h1>
+            <p>Manage the vehicles linked to your SmartPark account.</p>
+          </div>
+          <button class="btn btn-primary" id="add-vehicle-btn">+ Add Vehicle</button>
+        </div>
+        <div class="vehicle-grid" id="vehicle-grid"></div>
+      </section>
+
+      <!-- ====================================================
+           PARKING HISTORY
+           ==================================================== -->
+      <section id="view-parking-history" class="view">
+        <div class="page-header">
+          <h1>≡ƒôï Parking History</h1>
+          <p>Your complete parking activity log.</p>
+        </div>
+        <div class="table-controls">
+          <div class="table-search">
+            <span class="search-icon">≡ƒöì</span>
+            <input type="text" id="history-search" placeholder="Search history..." aria-label="Search history" />
+          </div>
+          <select class="form-control" id="history-zone-filter" style="width:auto;" aria-label="Filter by zone">
+            <option value="">All Zones</option>
+          </select>
+          <select class="form-control" id="history-status-filter" style="width:auto;" aria-label="Filter by status">
+            <option value="">All Status</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+            <option value="active">Active</option>
+          </select>
+        </div>
+        <div id="history-list"></div>
+      </section>
+
+      <!-- ====================================================
+           NOTIFICATIONS
+           ==================================================== -->
+      <section id="view-notifications" class="view">
+        <div class="page-header d-flex justify-between align-center">
+          <div>
+            <h1>≡ƒöö Notifications</h1>
+            <p>Stay updated on your parking activity and alerts.</p>
+          </div>
+          <button class="btn btn-outline btn-sm" id="mark-all-read-btn">Γ£ô Mark All Read</button>
+        </div>
+        <div class="notif-filter-tabs" role="group" aria-label="Notification categories">
+          <button class="filter-chip active" data-notif-filter="all">All</button>
+          <button class="filter-chip" data-notif-filter="reservation">Reservation</button>
+          <button class="filter-chip" data-notif-filter="availability">Availability</button>
+          <button class="filter-chip" data-notif-filter="expiry">Expiry</button>
+          <button class="filter-chip" data-notif-filter="prediction">Prediction</button>
+          <button class="filter-chip" data-notif-filter="violation">Violation</button>
+          <button class="filter-chip" data-notif-filter="system">System</button>
+        </div>
+        <div class="notifications-list" id="notifications-list"></div>
+      </section>
+
+      <!-- ====================================================
+           PROFILE
+           ==================================================== -->
+      <section id="view-profile" class="view">
+        <div class="page-header">
+          <h1>≡ƒæñ My Profile</h1>
+          <p>Manage your account information and preferences.</p>
+        </div>
+        <div class="profile-header-card">
+          <div class="profile-avatar" id="profile-avatar">U</div>
+          <div>
+            <div class="profile-name" id="profile-name">User Name</div>
+            <div class="profile-email" id="profile-email">user@example.com</div>
+            <div class="profile-role-badge" id="profile-role">≡ƒÜù Driver</div>
+          </div>
+          <div style="margin-left:auto;">
+            <button class="btn btn-secondary" id="edit-profile-btn">Γ£Å Edit Profile</button>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-header"><h3>Personal Information</h3></div>
+            <div class="card-body" id="profile-info-body"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Account Statistics</h3></div>
+            <div class="card-body" id="profile-stats-body"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================
+           ADMIN DASHBOARD
+           ==================================================== -->
+      <section id="view-admin-dashboard" class="view">
+        <div class="admin-header">
+          <h1>≡ƒ¢í SMARTPARK ADMIN</h1>
+          <p>Parking Operations Center ΓÇö Real-time monitoring and management</p>
+        </div>
+        <div class="stats-grid stats-grid-6">
+          <div class="stat-card">
+            <div class="stat-card-header">
+              <div>
+                <div class="stat-card-label">Total Spaces</div>
+                <div class="stat-card-value">850</div>
+              </div>
+              <div class="stat-card-icon blue">≡ƒà┐</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-header">
+              <div>
+                <div class="stat-card-label">Occupied</div>
+                <div class="stat-card-value" id="admin-occupied">614</div>
+              </div>
+              <div class="stat-card-icon red">≡ƒö┤</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-header">
+              <div>
+                <div class="stat-card-label">Available</div>
+                <div class="stat-card-value" id="admin-available">236</div>
+              </div>
+              <div class="stat-card-icon green">≡ƒƒó</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-header">
+              <div>
+                <div class="stat-card-label">Active Users</div>
+                <div class="stat-card-value">2,841</div>
+              </div>
+              <div class="stat-card-icon purple">≡ƒæÑ</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-header">
+              <div>
+                <div class="stat-card-label">Reservations</div>
+                <div class="stat-card-value" id="admin-res-count">184</div>
+              </div>
+              <div class="stat-card-icon cyan">≡ƒôà</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-header">
+              <div>
+                <div class="stat-card-label">Violations</div>
+                <div class="stat-card-value">17</div>
+              </div>
+              <div class="stat-card-icon orange">ΓÜá</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts row -->
+        <div class="grid-2 mt-20">
+          <div class="card">
+            <div class="card-header"><h3>≡ƒôê Today's Occupancy Trend</h3></div>
+            <div class="card-body">
+              <canvas id="admin-occ-chart" class="chart-canvas" height="200" aria-label="Occupancy trend chart"></canvas>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>≡ƒà┐ Zone Performance</h3></div>
+            <div class="card-body" id="admin-zone-performance"></div>
+          </div>
+        </div>
+
+        <!-- Recent Violations -->
+        <div class="card mt-20">
+          <div class="card-header">
+            <h3>ΓÜá Recent Violations</h3>
+            <button class="btn btn-ghost btn-sm" data-view="admin-violations">View All</button>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-container" style="border:none;border-radius:0;box-shadow:none;">
+              <table class="data-table" id="admin-recent-violations-table">
+                <thead><tr><th>Vehicle</th><th>Zone</th><th>Violation</th><th>Time</th><th>Status</th></tr></thead>
+                <tbody id="admin-violations-tbody-mini"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================
+           ADMIN PARKING ZONES
+           ==================================================== -->
+      <section id="view-admin-zones" class="view">
+        <div class="page-header d-flex justify-between align-center">
+          <div>
+            <h1>≡ƒà┐ Parking Zones</h1>
+            <p>Manage all parking zones in the SmartPark network.</p>
+          </div>
+          <button class="btn btn-primary" id="create-zone-btn">+ Create Zone</button>
+        </div>
+        <div class="table-controls">
+          <div class="table-search">
+            <span class="search-icon">≡ƒöì</span>
+            <input type="text" id="zones-search" placeholder="Search zones..." aria-label="Search zones" />
+          </div>
+        </div>
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Zone</th>
+                <th>Capacity</th>
+                <th>Occupied</th>
+                <th>Available</th>
+                <th>Occupancy</th>
+                <th>EV</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="zones-table-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ====================================================
+           ADMIN LIVE OCCUPANCY
+           ==================================================== -->
+      <section id="view-admin-occupancy" class="view">
+        <div class="page-header d-flex justify-between align-center">
+          <div>
+            <h1>≡ƒôí Live Occupancy Monitor</h1>
+            <p>Real-time parking occupancy across all zones.</p>
+          </div>
+          <div class="live-indicator"><div class="live-dot"></div> LIVE ΓÇö Auto-updating every 8s</div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3>Zone Occupancy Overview</h3>
+            <div id="occ-last-updated" style="font-size:.75rem;color:var(--text-muted);">Last updated: Just now</div>
+          </div>
+          <div class="card-body" id="live-occ-bars"></div>
+        </div>
+        <div class="mt-20 grid-2">
+          <div class="card">
+            <div class="card-header"><h3>≡ƒôè Occupancy Chart</h3></div>
+            <div class="card-body">
+              <canvas id="occ-bar-chart" class="chart-canvas" height="200" aria-label="Zone occupancy bar chart"></canvas>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>≡ƒöÑ Hotspot Analysis</h3></div>
+            <div class="card-body" id="hotspot-analysis"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================
+           ADMIN RESERVATIONS
+           ==================================================== -->
+      <section id="view-admin-reservations" class="view">
+        <div class="page-header">
+          <h1>≡ƒôà All Reservations</h1>
+          <p>View and manage all parking reservations.</p>
+        </div>
+        <div class="table-controls">
+          <div class="table-search">
+            <span class="search-icon">≡ƒöì</span>
+            <input type="text" id="admin-res-search" placeholder="Search reservations..." aria-label="Search reservations" />
+          </div>
+          <select class="form-control" id="admin-res-status-filter" style="width:auto;" aria-label="Filter by status">
+            <option value="">All Status</option>
+            <option value="active">Active</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr><th>Reservation ID</th><th>User</th><th>Zone</th><th>Slot</th><th>Entry</th><th>Exit</th><th>Vehicle</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="admin-res-table-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ====================================================
+           ADMIN USERS
+           ==================================================== -->
+      <section id="view-admin-users" class="view">
+        <div class="page-header">
+          <h1>≡ƒæÑ User Management</h1>
+          <p>View, search, and manage all SmartPark users.</p>
+        </div>
+        <div class="table-controls">
+          <div class="table-search">
+            <span class="search-icon">≡ƒöì</span>
+            <input type="text" id="admin-users-search" placeholder="Search users..." aria-label="Search users" />
+          </div>
+        </div>
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr><th>Name</th><th>Email</th><th>Phone</th><th>Vehicles</th><th>Reservations</th><th>Joined</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="admin-users-table-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ====================================================
+           ADMIN VIOLATIONS
+           ==================================================== -->
+      <section id="view-admin-violations" class="view">
+        <div class="page-header d-flex justify-between align-center">
+          <div>
+            <h1>ΓÜá Violations</h1>
+            <p>Track and resolve parking violations.</p>
+          </div>
+          <button class="btn btn-primary" id="add-violation-btn">+ Add Violation</button>
+        </div>
+        <div class="table-controls">
+          <div class="table-search">
+            <span class="search-icon">≡ƒöì</span>
+            <input type="text" id="violations-search" placeholder="Search violations..." aria-label="Search violations" />
+          </div>
+          <select class="form-control" id="violations-status-filter" style="width:auto;" aria-label="Filter violations by status">
+            <option value="">All Status</option>
+            <option value="open">Open</option>
+            <option value="resolved">Resolved</option>
+          </select>
+        </div>
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr><th>Vehicle</th><th>Zone</th><th>Slot</th><th>Violation</th><th>Time</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="violations-table-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ====================================================
+           ADMIN ALERTS
+           ==================================================== -->
+      <section id="view-admin-alerts" class="view">
+        <div class="page-header d-flex justify-between align-center">
+          <div>
+            <h1>≡ƒöö Alert Center</h1>
+            <p>Monitor and manage system alerts and warnings.</p>
+          </div>
+          <button class="btn btn-primary" id="create-alert-btn">+ Create Alert</button>
+        </div>
+        <div id="alerts-list"></div>
+      </section>
+
+      <!-- ====================================================
+           ADMIN ANALYTICS
+           ==================================================== -->
+      <section id="view-admin-analytics" class="view">
+        <div class="page-header d-flex justify-between align-center">
+          <div>
+            <h1>≡ƒôê Analytics</h1>
+            <p>Comprehensive parking analytics and performance insights.</p>
+          </div>
+          <div class="analytics-filters">
+            <select class="form-control" id="analytics-range" style="width:auto;" aria-label="Analytics date range">
+              <option value="today">Today</option>
+              <option value="week" selected>This Week</option>
+              <option value="month">This Month</option>
+              <option value="year">This Year</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="analytics-grid">
+          <div class="card">
+            <div class="card-header"><h3>Daily Occupancy Trend</h3></div>
+            <div class="card-body">
+              <canvas id="analytics-daily-chart" class="chart-canvas" height="220" aria-label="Daily occupancy chart"></canvas>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Zone Distribution</h3></div>
+            <div class="card-body" style="display:flex;align-items:center;justify-content:center;">
+              <canvas id="analytics-zone-chart" class="chart-canvas" height="220" style="max-width:220px;" aria-label="Zone distribution chart"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="grid-3 mt-20">
+          <div class="card">
+            <div class="card-header"><h3>Peak Hours</h3></div>
+            <div class="card-body">
+              <canvas id="analytics-peak-chart" class="chart-canvas" height="200" aria-label="Peak hours chart"></canvas>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Avg. Parking Duration</h3></div>
+            <div class="card-body" id="analytics-duration-body"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Weekly Performance</h3></div>
+            <div class="card-body">
+              <canvas id="analytics-weekly-chart" class="chart-canvas" height="200" aria-label="Weekly performance chart"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================
+           ADMIN PREDICTIONS
+           ==================================================== -->
+      <section id="view-admin-predictions" class="view">
+        <div class="page-header">
+          <h1>≡ƒñû Predictions</h1>
+          <p>AI-powered parking occupancy forecasts for all zones.</p>
+        </div>
+        <div class="grid-2 mb-20">
+          <div class="form-group">
+            <label class="form-label" for="pred-zone-select">Select Zone</label>
+            <select class="form-control" id="pred-zone-select" aria-label="Select zone for prediction">
+              <option value="A">Zone A</option>
+              <option value="B">Zone B</option>
+              <option value="C">Zone C</option>
+              <option value="D">Zone D</option>
+              <option value="E">Zone E</option>
+            </select>
+          </div>
+          <div style="display:flex;align-items:flex-end;gap:10px;">
+            <button class="btn btn-primary" id="run-prediction-btn">≡ƒñû Run Prediction</button>
+          </div>
+        </div>
+
+        <div class="card mb-20">
+          <div class="card-header">
+            <h3 id="pred-chart-title">Zone A ΓÇö Occupancy Prediction</h3>
+          </div>
+          <div class="card-body">
+            <canvas id="prediction-chart" class="chart-canvas" height="220" aria-label="Prediction chart"></canvas>
+            <div class="prediction-stats-row mt-20">
+              <div class="pred-stat">
+                <div class="pred-stat-label">ΓÅ░ Peak Time</div>
+                <div class="pred-stat-value" id="pred-peak-time">10:30 AM</div>
+              </div>
+              <div class="pred-stat">
+                <div class="pred-stat-label">≡ƒôè Expected Peak</div>
+                <div class="pred-stat-value" id="pred-peak-occ">94%</div>
+              </div>
+              <div class="pred-stat">
+                <div class="pred-stat-label">≡ƒÄ» Confidence</div>
+                <div class="pred-stat-value" id="pred-confidence">87%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="pred-zone-cards" class="parking-results-grid"></div>
+      </section>
+
+      <!-- ====================================================
+           ADMIN SENSOR SIMULATOR
+           ==================================================== -->
+      <section id="view-admin-sensor" class="view">
+        <div class="page-header">
+          <h1>≡ƒ¢░ Sensor Simulator</h1>
+          <p>Simulate IoT sensor data to test SmartPark live updates.</p>
+        </div>
+        <div class="grid-2">
+          <!-- Zone Selection -->
+          <div>
+            <div class="form-group">
+              <label class="form-label" for="sim-zone-select">Select Zone</label>
+              <select class="form-control" id="sim-zone-select" aria-label="Select zone to simulate">
+                <option value="A">Zone A</option>
+                <option value="B">Zone B</option>
+                <option value="C">Zone C</option>
+                <option value="D">Zone D</option>
+                <option value="E">Zone E</option>
+              </select>
+            </div>
+            <div id="sensor-panels-grid" class="grid-2"></div>
+          </div>
+
+          <!-- Zone Meter -->
+          <div class="sensor-panel">
+            <div class="sensor-header">
+              <div style="font-size:.9rem;font-weight:700;">Zone <span id="sim-zone-label">A</span> ΓÇö Live Monitor</div>
+              <div class="live-indicator"><div class="live-dot"></div> LIVE</div>
+            </div>
+            <div class="sensor-body">
+              <div class="sensor-gauge">
+                <div class="gauge-circle" id="sim-gauge">
+                  <div class="gauge-pct" id="sim-gauge-pct">78%</div>
+                  <div class="gauge-label">Occupied</div>
+                </div>
+                <div style="font-size:.82rem;color:var(--text-secondary);text-align:center;">
+                  <span id="sim-occupied">156</span> / <span id="sim-capacity">200</span> spaces occupied
+                </div>
+              </div>
+              <div style="display:flex;gap:10px;margin-top:16px;">
+                <button class="btn btn-danger flex-1" id="sim-entry-btn">≡ƒÜù Simulate Entry</button>
+                <button class="btn btn-success flex-1" id="sim-exit-btn">≡ƒÜù Simulate Exit</button>
+              </div>
+              <button class="btn btn-outline btn-block mt-12" id="sim-random-btn">≡ƒÄ▓ Generate Random Data</button>
+              <div class="sensor-log" id="sim-log" aria-live="polite" aria-label="Sensor log"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================
+           ADMIN SETTINGS
+           ==================================================== -->
+      <section id="view-admin-settings" class="view">
+        <div class="page-header">
+          <h1>ΓÜÖ Settings</h1>
+          <p>Configure SmartPark system preferences and appearance.</p>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-section-title">Appearance</div>
+          <div class="settings-row">
+            <div class="settings-row-info">
+              <h4>Dark Mode</h4>
+              <p>Switch between light and dark interface theme</p>
+            </div>
+            <label class="toggle-switch" aria-label="Toggle dark mode">
+              <input type="checkbox" id="settings-dark-toggle" />
+              <div class="toggle-switch-track"></div>
+            </label>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-info">
+              <h4>Compact View</h4>
+              <p>Reduce spacing for more content on screen</p>
+            </div>
+            <label class="toggle-switch" aria-label="Toggle compact view">
+              <input type="checkbox" id="settings-compact-toggle" />
+              <div class="toggle-switch-track"></div>
+            </label>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-section-title">Notifications</div>
+          <div class="settings-row">
+            <div class="settings-row-info">
+              <h4>Reservation Alerts</h4>
+              <p>Get notified when your reservation is confirmed or cancelled</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" checked id="notif-reservation-toggle" />
+              <div class="toggle-switch-track"></div>
+            </label>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-info">
+              <h4>Parking Expiry Alerts</h4>
+              <p>Get reminded 15 minutes before parking expires</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" checked id="notif-expiry-toggle" />
+              <div class="toggle-switch-track"></div>
+            </label>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-info">
+              <h4>Zone Availability Alerts</h4>
+              <p>Notify when your favourite zone has availability</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="notif-avail-toggle" />
+              <div class="toggle-switch-track"></div>
+            </label>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-info">
+              <h4>Prediction Alerts</h4>
+              <p>Alert when occupancy prediction changes significantly</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" checked id="notif-pred-toggle" />
+              <div class="toggle-switch-track"></div>
+            </label>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-section-title">System</div>
+          <div class="settings-row">
+            <div class="settings-row-info">
+              <h4>Auto-refresh Live Data</h4>
+              <p>Automatically update occupancy data every 8 seconds</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" checked id="settings-autorefresh-toggle" />
+              <div class="toggle-switch-track"></div>
+            </label>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-info">
+              <h4>Sensor Simulation Mode</h4>
+              <p>Enable IoT sensor simulation for demo purposes</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" checked id="settings-sim-toggle" />
+              <div class="toggle-switch-track"></div>
+            </label>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-info">
+              <h4>Reset Demo Data</h4>
+              <p>Restore all mock data to default values</p>
+            </div>
+            <button class="btn btn-danger btn-sm" id="reset-data-btn">Reset Data</button>
+          </div>
+        </div>
+      </section>
+
+    </main><!-- /page-content -->
+  </div><!-- /main-content -->
+</div><!-- /app-shell -->
+
+<script src="script.js"></script>
+</body>
+</html>
