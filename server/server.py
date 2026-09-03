@@ -9,7 +9,15 @@ import json
 import urllib.parse
 import os
 import sys
-from datetime import datetime
+
+# Ensure root workspace directory is in sys.path
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if BASE_DIR not in sys.path:
+    sys.path.insert(0, BASE_DIR)
+# If script was run directly as python server/server.py, remove the server subdir from sys.path[1]
+for p in list(sys.path):
+    if p.endswith(os.path.sep + 'server') or p == 'server':
+        sys.path.remove(p)
 
 # Import business engines
 from server.services.business_services import (
@@ -18,7 +26,7 @@ from server.services.business_services import (
     SensorSimulatorService, NotificationService, AuditService
 )
 
-PORT = 8085
+PORT = int(os.environ.get("PORT", 8000))
 STATIC_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 class SmartParkRequestHandler(http.server.SimpleHTTPRequestHandler):
@@ -213,7 +221,8 @@ class SmartParkRequestHandler(http.server.SimpleHTTPRequestHandler):
 
 if __name__ == "__main__":
     server_address = ('', PORT)
-    httpd = socketserver.TCPServer(server_address, SmartParkRequestHandler)
+    socketserver.ThreadingTCPServer.allow_reuse_address = True
+    httpd = socketserver.ThreadingTCPServer(server_address, SmartParkRequestHandler)
     print("=========================================================")
     print(f"[SMARTPARK] Full-Stack Server Running on http://localhost:{PORT}")
     print(f"[SMARTPARK] Serving REST APIs & Frontend Assets from {STATIC_DIR}")
