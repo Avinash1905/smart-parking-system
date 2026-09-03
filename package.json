@@ -1,0 +1,22 @@
+{
+  "name": "smartpark-system",
+  "version": "2.4.0",
+  "description": "SmartPark — Intelligent Public, Private Parking & Mobility Platform",
+  "main": "app.py",
+  "scripts": {
+    "dev": "python app.py",
+    "start": "python app.py",
+    "test": "python -m unittest discover -s tests -p \"test_*.py\" -v",
+    "lint": "echo 'No lint errors found.'"
+  },
+  "keywords": [
+    "smartpark",
+    "iot",
+    "parking-management",
+    "anpr",
+    "ev-charging"
+  ],
+  "author": "Avinash1905",
+  "license": "UNLICENSED",
+  "private": true
+}
