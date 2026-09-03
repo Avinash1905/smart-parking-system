@@ -6,6 +6,36 @@
 import { authService } from '../data/authService.js';
 import { showToast } from './toast.js';
 
+export function renderLoadingState(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  container.innerHTML = `
+    <div class="card" style="padding: 40px 20px; text-align: center;">
+      <div class="loading-spinner" style="width: 36px; height: 36px; border: 3px solid rgba(79,70,229,0.2); border-top-color: var(--primary-600); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px;"></div>
+      <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">Loading Parking Zones...</h3>
+      <p style="font-size: 0.875rem; color: var(--text-secondary); max-width: 340px; margin: 0 auto;">Connecting to municipal IoT telemetry gateway and real-time bay sensors.</p>
+    </div>
+  `;
+}
+
+export function renderErrorState(containerId, onRetry) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  container.innerHTML = `
+    <div class="card" style="padding: 40px 20px; text-align: center;">
+      <div style="font-size: 2rem; margin-bottom: 8px;">⚠️</div>
+      <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--status-low-text); margin-bottom: 4px;">Unable to Load Parking Zones</h3>
+      <p style="font-size: 0.875rem; color: var(--text-secondary); max-width: 360px; margin: 0 auto 16px;">Failed to synchronize with the sensor gateway. Please check your connection and retry.</p>
+      <button type="button" class="btn btn-primary btn-sm" id="btn-retry-parking-load">
+        ↻ Retry Sensor Sync
+      </button>
+    </div>
+  `;
+  document.getElementById('btn-retry-parking-load')?.addEventListener('click', () => {
+    if (onRetry) onRetry();
+  });
+}
+
 export function renderParkingList(containerId, zones, selectedZoneId, onSelectZone, onViewDetails, onReserve) {
   const container = document.getElementById(containerId);
   if (!container) return;

@@ -12,13 +12,14 @@ import {
 } from './data/privateParkingData.js';
 import { authService } from './data/authService.js';
 import { adminService } from './data/adminService.js';
+import { parkingApiService } from './services/parkingApiService.js';
 import { showToast } from './components/toast.js';
 import { runAuthTestSuite } from './components/authTestSuite.js';
 
 import { initThemeManager } from './components/themeManager.js';
 import { renderSummaryStats } from './components/summaryStats.js';
 import { initSearchFilterBar } from './components/searchFilterBar.js';
-import { renderParkingList } from './components/parkingList.js';
+import { renderParkingList, renderLoadingState, renderErrorState } from './components/parkingList.js';
 import { initParkingMap } from './components/parkingMap.js';
 import { renderPredictionSection } from './components/predictionSection.js';
 import { initModals } from './components/modals.js';
@@ -462,10 +463,87 @@ class SmartParkApp {
       this.applyPublicFilters();
     });
 
-    this.renderPublicListAndMap();
+    this.loadPublicZones();
+  }
 
-    const selectedZone = this.publicZones.find(z => z.id === this.selectedPublicZoneId) || this.publicZones[0];
-    renderPredictionSection('prediction-section-container', selectedZone);
+  async loadPublicZones() {
+    renderLoadingState('parking-list-container');
+    try {
+      const response = await parkingApiService.getPublicZones();
+      if (response && response.success && Array.isArray(response.data) && response.data.length > 0) {
+        const defaultCoords = [
+          { x: 32, y: 42 }, { x: 58, y: 34 }, { x: 74, y: 55 }, { x: 44, y: 68 },
+          { x: 18, y: 28 }, { x: 62, y: 18 }, { x: 82, y: 38 }, { x: 25, y: 62 }
+        ];
+
+        this.publicZones = response.data.map((z, idx) => {
+          const total = Number(z.total_spaces || z.totalSpaces || 100);
+          const avail = Number(z.available_spaces !== undefined ? z.available_spaces : (z.availableSpaces !== undefined ? z.availableSpaces : 50));
+          const occPct = Math.round(((total - avail) / Math.max(total, 1)) * 100);
+          const coord = defaultCoords[idx % defaultCoords.length];
+
+          return {
+            id: z.id || `zone-${idx}`,
+            name: z.name || 'Municipal Parking Facility',
+            type: z.category || 'PUBLIC',
+            category: z.category || 'PUBLIC',
+            zoneCode: z.zone_code || z.zoneCode || `PUB-0${idx + 1}`,
+            address: z.address || 'Central City Hub',
+            city: z.city || 'Bengaluru',
+            latitude: Number(z.latitude || 12.9716),
+            longitude: Number(z.longitude || 77.5946),
+            mapX: Number(z.map_x !== undefined ? z.map_x : (z.mapX !== undefined ? z.mapX : coord.x)),
+            mapY: Number(z.map_y !== undefined ? z.map_y : (z.mapY !== undefined ? z.mapY : coord.y)),
+            totalSpaces: total,
+            availableSpaces: avail,
+            occupiedSpaces: total - avail,
+            occupancyPercent: occPct,
+            pricePerHour: Number(z.price_per_hour !== undefined ? z.price_per_hour : (z.pricePerHour || 20)),
+            distanceKm: Number(z.distance_km !== undefined ? z.distance_km : (z.distanceKm || 1.2)),
+            walkingMinutes: Number(z.walking_minutes !== undefined ? z.walking_minutes : (z.walkingMinutes || 5)),
+            availabilityStatus: occPct >= 85 ? 'LOW' : (occPct >= 65 ? 'MEDIUM' : 'HIGH'),
+            evCharging: Boolean(z.ev_spaces > 0 || z.evCharging),
+            evSpaces: Number(z.ev_spaces || z.evSpaces || 0),
+            open24x7: Boolean(z.open_24x7 !== undefined ? z.open_24x7 : true),
+            securityGuardOnSite: Boolean(z.security_guard_on_site !== undefined ? z.security_guard_on_site : true),
+            anprCameraInstalled: Boolean(z.anpr_camera_installed !== undefined ? z.anpr_camera_installed : true),
+            coveredRoof: Boolean(z.covered_roof !== undefined ? z.covered_roof : true),
+            rating: Number(z.rating || 4.8),
+            reviewsCount: Number(z.total_reviews || 120),
+            amenities: ["CCTV Surveillance", "EV Fast Charging", "Covered Bay", "24/7 Access"],
+            tariff: {
+              firstHour: Number(z.price_per_hour || 20),
+              subsequentPerHour: Number(z.price_per_hour || 20),
+              fullDayPass: Number(z.price_per_hour || 20) * 6
+            },
+            forecast: {
+              current: occPct,
+              plus10m: Math.min(100, occPct + 4),
+              plus20m: Math.min(100, occPct + 8),
+              plus30m: Math.min(100, occPct + 12)
+            },
+            predictedFullInMinutes: Math.max(15, Math.round((avail / Math.max(total, 1)) * 90)),
+            predictionMessage: occPct < 65 ? 'High availability for the next 45 minutes' : 'Optimal arrival within next 15 minutes'
+          };
+        });
+
+        // Sync summary statistics dynamically
+        const totalAvail = this.publicZones.reduce((acc, z) => acc + z.availableSpaces, 0);
+        const totalCap = this.publicZones.reduce((acc, z) => acc + z.totalSpaces, 0);
+        const avgOcc = Math.round(((totalCap - totalAvail) / Math.max(totalCap, 1)) * 100);
+
+        renderSummaryStats('parking-summary-container', {
+          totalAvailableSpaces: totalAvail,
+          totalPublicZones: this.publicZones.length,
+          currentlyOccupiedPercent: avgOcc,
+          activeParkingAreas: this.publicZones.length
+        });
+      }
+    } catch (err) {
+      console.warn("[SmartPark API Fallback to Local Zones]:", err.message);
+    } finally {
+      this.applyPublicFilters();
+    }
   }
 
   applyPublicFilters() {
@@ -792,7 +870,18 @@ class SmartParkApp {
 }
 
 // Bootstrap
-document.addEventListener('DOMContentLoaded', () => {
-  const app = new SmartParkApp();
-  app.init();
-});
+function bootstrap() {
+  try {
+    const app = new SmartParkApp();
+    window.smartParkApp = app;
+    app.init();
+  } catch (err) {
+    console.error("[SmartPark Bootstrap Error]:", err);
+  }
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", bootstrap);
+} else {
+  bootstrap();
+}
