@@ -1,0 +1,31 @@
+/* SmartPark Employee Whitelist & EV Charging Styles */
+
+.emp-quota-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  margin-bottom: 16px;
+}
+
+.rfid-pill-badge {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--primary-600);
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-color);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+}
+
+.ev-gauge-container {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  border-radius: var(--radius-xl);
+  margin-bottom: 20px;
+}
