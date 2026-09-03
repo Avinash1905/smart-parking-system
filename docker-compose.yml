@@ -1,9 +1,11 @@
 version: '3.8'
 
 services:
-  smartpark:
-    build: .
-    container_name: smartpark-app
+  smartpark-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: smartpark-server
     ports:
       - "8000:8000"
     environment:
