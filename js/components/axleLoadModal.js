@@ -1,0 +1,74 @@
+/**
+ * SmartPark Weigh-in-Motion (WIM) Axle Load Modal Component
+ * Monitors quartz piezo-electric gross vehicle weight sensors (2,140 kg vs 3,500 kg limit).
+ */
+
+import { showToast } from './toast.js';
+
+export function openAxleLoadModal(zoneName = "Municipal Central Parking") {
+  let modalContainer = document.getElementById('modals-root');
+  if (!modalContainer) {
+    modalContainer = document.createElement('div');
+    modalContainer.id = 'modals-root';
+    document.body.appendChild(modalContainer);
+  }
+
+  function closeModal() {
+    const overlay = document.querySelector('.modal-overlay.active');
+    if (overlay) {
+      overlay.classList.remove('active');
+      setTimeout(() => overlay.remove(), 250);
+    }
+  }
+
+  const modalHtml = `
+    <div class="modal-overlay active" id="modal-wim-overlay">
+      <div class="modal-content" style="max-width: 580px;">
+        <div class="modal-header">
+          <div>
+            <span class="badge badge-public" style="background: rgba(99,102,241,0.15); color: var(--primary-600); margin-bottom: 4px;">
+              ⚖️ Structural Deck Protection
+            </span>
+            <h3 class="modal-title">Weigh-in-Motion (WIM) Axle Sensor</h3>
+          </div>
+          <button type="button" class="modal-close" id="modal-wim-close">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+
+        <div class="modal-body" style="padding: 20px;">
+          <!-- WIM Status Card -->
+          <div style="background: var(--bg-surface-subtle); border: 2px solid var(--border-color); border-radius: var(--radius-xl); padding: 20px; text-align: center; margin-bottom: 20px;">
+            <div style="font-size: 2.2rem; margin-bottom: 4px;">⚖️🚗🛣️</div>
+            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">MEASURED GROSS VEHICLE WEIGHT</span>
+            <div style="font-size: 2.2rem; font-weight: 900; color: var(--status-high-text); margin: 4px 0;">2,140 kg (2 Axles)</div>
+            <span class="badge badge-public" style="background: rgba(16,185,129,0.2); color: var(--status-high-text);">
+              ● Within Safe Limits (Max Deck Rating: 3,500 kg - COST 323 Class A5)
+            </span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.84rem; color: var(--text-secondary); margin-bottom: 20px;">
+            <div style="background: var(--bg-surface); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+              <div>Ingress Lane: <strong style="color: var(--text-primary);">Lane 1 Main Portal</strong></div>
+            </div>
+            <div style="background: var(--bg-surface); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+              <div>Status: <strong style="color: var(--status-high-text);">Cleared for Deck Entry</strong></div>
+            </div>
+          </div>
+
+          <button type="button" class="btn btn-secondary btn-sm" id="btn-close-wim" style="width: 100%;">
+            Close WIM Telemetry
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  modalContainer.innerHTML = modalHtml;
+
+  document.getElementById('modal-wim-close').addEventListener('click', closeModal);
+  document.getElementById('btn-close-wim').addEventListener('click', closeModal);
+  document.getElementById('modal-wim-overlay').addEventListener('click', (e) => {
+    if (e.target.id === 'modal-wim-overlay') closeModal();
+  });
+}

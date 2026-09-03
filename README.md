@@ -118,12 +118,7 @@ pip install -r requirements.txt
 
 ## Environment Configuration
 
-Copy the example environment template:
-```bash
-cp .env.example .env
-```
-
-Available configuration flags:
+SmartPark works out-of-the-box with zero configuration. Standard runtime variables can optionally be set:
 - `PORT`: Server port (Default: `8000`)
 - `HOST`: Server interface binding (Default: `0.0.0.0`)
 - `DB_NAME`: SQLite database filename (Default: `smartpark.db`)

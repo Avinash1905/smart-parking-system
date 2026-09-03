@@ -10,6 +10,8 @@ export const DASHBOARD_METRICS = {
   savedVehiclesCount: 2
 };
 
+export const DASHBOARD_SUMMARY_DATA = DASHBOARD_METRICS;
+
 export const ACTIVE_RESERVATION = {
   id: "res-act-7890",
   passId: "SP-984210",

@@ -60,9 +60,10 @@ class SmartParkRequestHandler(http.server.SimpleHTTPRequestHandler):
         # REST API ROUTING
         # ---------------------------------------------------------
         if path.startswith("/api/"):
-            # 1. Public Parking
-            if path == "/api/parking/public":
-                zones = ParkingService.get_all_zones(category="PUBLIC")
+            # 1. Public / All Zones
+            if path in ["/api/parking/public", "/api/zones"]:
+                category = "PUBLIC" if path == "/api/parking/public" else None
+                zones = ParkingService.get_all_zones(category=category)
                 return self._send_json({"success": True, "count": len(zones), "data": zones})
 
             # 2. Private Parking (Filtered by User Access if user_id query provided)
@@ -71,6 +72,12 @@ class SmartParkRequestHandler(http.server.SimpleHTTPRequestHandler):
                 zones = ParkingService.get_all_zones()
                 private_zones = [z for z in zones if z["category"] != "PUBLIC"]
                 return self._send_json({"success": True, "count": len(private_zones), "data": private_zones})
+
+            # 2b. Direct Slots Query by Zone ID
+            elif path == "/api/slots":
+                zone_id = query.get("zone_id", ["zone-pub-01"])[0]
+                slots = SlotService.get_slots_by_zone(zone_id)
+                return self._send_json({"success": True, "count": len(slots), "data": slots})
 
             # 3. Zone by ID
             elif path.startswith("/api/parking/") and not path.endswith("/slots") and not path.endswith("/prediction"):
@@ -87,13 +94,16 @@ class SmartParkRequestHandler(http.server.SimpleHTTPRequestHandler):
                 return self._send_json({"success": True, "count": len(slots), "data": slots})
 
             # 5. ML Occupancy Prediction
-            elif path.startswith("/api/parking/") and path.endswith("/prediction"):
-                zone_id = path.split("/api/parking/")[1].replace("/prediction", "")
+            elif (path.startswith("/api/parking/") and path.endswith("/prediction")) or path == "/api/predictions/occupancy":
+                if path == "/api/predictions/occupancy":
+                    zone_id = query.get("zone_id", ["zone-pub-01"])[0]
+                else:
+                    zone_id = path.split("/api/parking/")[1].replace("/prediction", "")
                 prediction = PredictionService.calculate_prediction(zone_id)
                 return self._send_json({"success": True, "data": prediction})
 
             # 6. Smart Recommendations
-            elif path == "/api/recommendations":
+            elif path in ["/api/recommendations", "/api/predictions/recommendations"]:
                 user_id = query.get("user_id", [None])[0]
                 user = AuthService.get_user_by_id(user_id) if user_id else None
                 recs = RecommendationService.get_top_recommendations(user)
